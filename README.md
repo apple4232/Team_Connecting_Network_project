@@ -16,6 +16,14 @@ Use Upstage Solar LLM for evidence-based failure diagnosis and a Python program 
 
 A prototype system integrating network failure detection, LLM-based diagnosis, and automatic reconnection and transfer resumption.
 
+## First Demo
+
+The [First Demo](First%20Demo/) folder contains the demo source files. From the repository root, enter the folder before running the commands below.
+
+```bash
+cd "First Demo"
+```
+
 ## Iteration 1 — Resumable TCP file transfer
 
 Local TCP server/client on `127.0.0.1`, Python standard library only.
