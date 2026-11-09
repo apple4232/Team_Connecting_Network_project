@@ -42,3 +42,26 @@ Verified results (Windows 10, Git Bash, Python 3.12.2; 4,194,304-byte file, SHA-
 - Error paths: duplicate output → exit 3 (no overwrite), retry exhaustion → exit 1 (`.part` kept), identity change → exit 2, server rejects `INVALID_OFFSET` / `FILE_NOT_FOUND`.
 
 Logs (JSONL, per run under `demo_artifacts/<case>/logs/`): observation logs `server.jsonl` / `client.jsonl` carry time, event type, and byte positions; fault-injection records are kept separately in `injection.jsonl` (`class: "injection"`) so diagnosis can later be scored against ground truth the model never sees.
+
+## Iteration 2 — Restart vs resume comparison
+
+`ftclient.py --recovery-mode resume|restart` (default `resume`): after reconnecting and re-verifying the file identity, `restart` discards the `.part` file and requests offset 0; `resume` requests the byte position actually stored. Both modes share identity verification, retry limits, error handling, and final verification.
+
+```bash
+python compare_recovery.py   # same file, same cut point, same timeout/retries for both modes
+```
+
+Metric definitions (all aggregated from actual logs, never hardcoded in the table):
+
+- **Reconnect offset**: the client `REQUEST` offset after the first `RECONNECTED`.
+- **Recovered bytes**: sum of server `bytes_sent` over all connections except the first one (file body only, protocol headers excluded, multiple reconnects summed).
+- **Recovery time**: first `RECONNECTED` → `TRANSFER_COMPLETED`, measured on the client's monotonic clock (log `mono` field), so both modes share the same definition; includes identity re-verification and any further retries, excludes final hash verification.
+
+Verified results (same environment, 4,194,304-byte file, cut at byte 1,398,101):
+
+| Mode | Reconnect offset | Recovered bytes (expected) | Recovery time |
+|---|---|---|---|
+| restart | 0 | 4,194,304 B (= 4,194,304) | 15–78 ms |
+| resume | 1,398,101 | 2,796,203 B (= 2,796,203) | 15–47 ms |
+
+Byte savings: resume transfers exactly 1,398,101 B (~33%) less — a structural difference (size − offset) reproduced identically on every run. Recovery-time differences were within timer-resolution noise at loopback speed, so faster recovery was **not** claimed; savings and time are reported separately. Summary: `compare_artifacts/summary.json`.

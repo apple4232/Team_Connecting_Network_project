@@ -22,6 +22,7 @@ import hashlib
 import json
 import pathlib
 import socket
+import time
 
 HEADER_BYTES = 4          # 길이 필드 크기 (big-endian)
 MAX_FRAME = 1 << 20       # 헤더 JSON 한 프레임 최대 크기 (1 MiB)
@@ -82,9 +83,10 @@ def sha256_file(path: pathlib.Path, chunk: int = 1 << 20) -> str:
 class JsonlLog:
     """한 줄에 JSON 레코드 하나를 append 하는 로거.
 
-    모든 레코드는 ts(시간), actor(주체), class(관측/주입), event(종류)를
-    기본 필드로 갖는다. 장애 주입 기록은 class="injection" 으로 구분해
-    별도 파일에 남긴다.
+    모든 레코드는 ts(벽시계 ISO), mono(프로세스 단조 시계, 같은 프로세스
+    이벤트 간 경과 시간 계산용), actor(주체), class(관측/주입),
+    event(종류)를 기본 필드로 갖는다. 장애 주입 기록은
+    class="injection" 으로 구분해 별도 파일에 남긴다.
     """
 
     def __init__(self, path: pathlib.Path, actor: str, klass: str):
@@ -95,6 +97,7 @@ class JsonlLog:
     def write(self, event: str, **fields) -> None:
         rec = {
             "ts": now_iso(),
+            "mono": round(time.monotonic(), 6),
             "actor": self.actor,
             "class": self.klass,
             "event": event,

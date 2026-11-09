@@ -46,8 +46,12 @@ def transfer(out: pathlib.Path, temp: pathlib.Path, log: JsonlLog,
     interrupt_reason: str | None = None
 
     while True:
-        # 재개 위치 = 임시 파일에 실제로 저장된 바이트 수
-        offset = temp.stat().st_size if temp.exists() else 0
+        # 재개 위치 = 임시 파일에 실제로 저장된 바이트 수.
+        # restart 방식의 재접속에서는 처음부터(offset 0) 다시 요청한다.
+        if is_retry and args.recovery_mode == "restart":
+            offset = 0
+        else:
+            offset = temp.stat().st_size if temp.exists() else 0
         interrupt_reason = None
         with socket.create_connection((args.host, args.port),
                                       timeout=args.timeout) as sock:
@@ -79,11 +83,19 @@ def transfer(out: pathlib.Path, temp: pathlib.Path, log: JsonlLog,
                         f"file size changed: {meta['size']} -> {resp['size']}")
                 print(f"Resuming from byte {offset}")
                 log.write("RESUME_REQUEST", offset=offset,
-                          remaining=resp["size"] - offset)
+                          remaining=resp["size"] - offset,
+                          recovery_mode=args.recovery_mode)
             if resp["offset"] != offset:
                 raise ProtocolError(
                     f"resume offset mismatch: requested {offset}, "
                     f"server confirmed {resp['offset']}")
+            # restart 방식: 파일 식별값 확인이 끝난 뒤 .part 를 비우고
+            # 처음부터 다시 받는다 (식별값이 다르면 삭제하지 않고 종료).
+            if is_retry and args.recovery_mode == "restart" and temp.exists():
+                discarded = temp.stat().st_size
+                temp.unlink()
+                log.write("RESTART_RESET", discarded_bytes=discarded,
+                          recovery_mode="restart")
 
             remaining = expected - offset
             stored = 0
@@ -119,15 +131,17 @@ def transfer(out: pathlib.Path, temp: pathlib.Path, log: JsonlLog,
         time.sleep(args.retry_delay)
         is_retry = True
 
-    # 완료 검증: 최종 크기와 SHA-256이 모두 일치해야 성공
+    # 완료 검증: 최종 크기와 SHA-256이 모두 일치해야 성공.
+    # TRANSFER_COMPLETED 는 본문 수신 완료 시점(검증 전)에 기록해
+    # 복구 시간 측정 기준으로 쓴다.
     final_size = temp.stat().st_size
+    log.write("TRANSFER_COMPLETED", bytes=final_size)
     if final_size != expected:
         print(f"[client] 크기 불일치: 기대 {expected}, 실제 {final_size}")
         log.write("ERROR", code="SIZE_MISMATCH",
                   expected=expected, actual=final_size)
         return 1
     print("Transfer completed")
-    log.write("TRANSFER_COMPLETED", bytes=final_size)
 
     actual_digest = sha256_file(temp)
     if actual_digest != meta["sha256"]:
@@ -157,6 +171,10 @@ def main() -> int:
     ap.add_argument("--output", type=pathlib.Path, required=True,
                     help="완료 시 저장할 출력 파일 경로")
     ap.add_argument("--log-dir", type=pathlib.Path, default=pathlib.Path("logs"))
+    ap.add_argument("--recovery-mode", choices=["resume", "restart"],
+                    default="resume",
+                    help="재접속 시 복구 방식: resume=저장된 위치부터 이어받기"
+                         "(기본), restart=.part 를 비우고 처음부터 다시 받기")
     ap.add_argument("--retries", type=int, default=3,
                     help="재접속 최대 시도 횟수 (기본 3)")
     ap.add_argument("--timeout", type=float, default=5.0,
@@ -177,7 +195,8 @@ def main() -> int:
     args.log_dir.mkdir(parents=True, exist_ok=True)
     log = JsonlLog(args.log_dir / "client.jsonl", "client", "observation")
     log.write("CLIENT_START", file_id=args.file_id, output=str(out),
-              retries=args.retries, timeout=args.timeout)
+              retries=args.retries, timeout=args.timeout,
+              recovery_mode=args.recovery_mode)
     if temp.exists():
         temp.unlink()  # 이전 실행의 임시 파일 — 신원을 보증할 수 없으므로 초기화
         log.write("TEMP_RESET", path=str(temp),
