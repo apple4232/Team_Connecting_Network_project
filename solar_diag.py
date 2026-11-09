@@ -49,8 +49,8 @@ from demo import force_utf8_stdout, load_jsonl
 BASE = pathlib.Path(__file__).resolve().parent
 ART = BASE / "diag_artifacts"
 
-SOLAR_URL = "https://api.upstage.ai/v1/solar/chat/completions"
-SOLAR_MODEL = os.environ.get("UPSTAGE_MODEL", "solar-pro")
+SOLAR_URL = "https://api.upstage.ai/v1/chat/completions"
+SOLAR_MODEL = os.environ.get("UPSTAGE_MODEL", "solar-pro4")
 API_KEY_ENV = "UPSTAGE_API_KEY"
 
 STATUSES = ("early_connection_close", "timeout_or_stall",
