@@ -27,6 +27,7 @@ import pathlib
 import shutil
 import subprocess
 import sys
+import time
 
 from demo import (EXPECTED_FLOW, force_utf8_stdout, is_subsequence,
                   load_jsonl, make_test_file, wait_server_ready)
@@ -81,6 +82,20 @@ def run_mode(mode: str, port: int, test_file: pathlib.Path, inject_at: int,
         print(f"[compare] client exit code: {rc}")
         return rc, lines, logs
     finally:
+        # 클라이언트 종료 직후 서버를 바로 terminate 하면, 서버가 마지막
+        # CONNECTION_CLOSED 로그를 쓰기 전에 죽어 bytes_sent 집계가
+        # 누락될 수 있다. 모든 요청 연결의 종료 기록이 로그에 남을 때까지
+        # 잠깐 기다린 뒤 종료한다 (최대 2초).
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and proc.poll() is None:
+            recs = load_jsonl(logs / "server.jsonl")
+            requested = {r.get("conn_id") for r in recs
+                         if r.get("event") == "REQUEST"}
+            closed = {r.get("conn_id") for r in recs
+                      if r.get("event") == "CONNECTION_CLOSED"}
+            if requested and requested <= closed:
+                break
+            time.sleep(0.02)
         if proc.poll() is None:
             proc.terminate()
             try:
@@ -229,9 +244,15 @@ def main() -> int:
     r, s = results["restart"], results["resume"]
     if isinstance(r["recovered_bytes"], int) \
             and isinstance(s["recovered_bytes"], int):
+        diff = r["recovered_bytes"] - s["recovered_bytes"]
+        if diff > 0:
+            verdict = f"resume 이 {diff} B 적게 받음"
+        elif diff < 0:
+            verdict = f"restart 이 {-diff} B 적게 받음"
+        else:
+            verdict = "동일"
         print(f"\n[compare] 복구 후 전송량(실측): resume {s['recovered_bytes']} B "
-              f"vs restart {r['recovered_bytes']} B "
-              f"→ resume 이 {r['recovered_bytes'] - s['recovered_bytes']} B 적음")
+              f"vs restart {r['recovered_bytes']} B → {verdict}")
     if isinstance(r["recovery_ms"], (int, float)) \
             and isinstance(s["recovery_ms"], (int, float)):
         if s["recovery_ms"] < r["recovery_ms"]:
