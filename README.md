@@ -65,3 +65,16 @@ Verified results (same environment, 4,194,304-byte file, cut at byte 1,398,101):
 | resume | 1,398,101 | 2,796,203 B (= 2,796,203) | 15–47 ms |
 
 Byte savings: resume transfers exactly 1,398,101 B (~33%) less — a structural difference (size − offset) reproduced identically on every run. Recovery-time differences were within timer-resolution noise at loopback speed, so faster recovery was **not** claimed; savings and time are reported separately. Summary: `compare_artifacts/summary.json`.
+
+## Iteration 3a — Evidence collection for failure diagnosis
+
+`observe_run.py` re-runs cases with the existing server/client (Python recovery is untouched and independent of any LLM) and distills observation logs into diagnosis-ready evidence.
+
+```bash
+python observe_run.py            # cases: normal / early_close / insufficient
+```
+
+- Output per run under `diag_artifacts/run-<ts>-<n>/`: `evidence.jsonl` (whitelisted events only), `run_meta.json` (recovery outcome, capture-tool status), raw logs.
+- Evidence records carry `evidence_id`, `source` (`server_app`/`client_app`), wall-clock `ts` (same host clock, so server/client lines form one timeline), event type, and byte positions. Whitelist excludes file paths, file identifiers, SHA-256 values, injection records (`injection.jsonl` is kept apart as ground truth), and case names — so nothing reveals the answer to the diagnoser.
+- The `insufficient` case intentionally keeps only connection-accept/start events (no completion/interruption), representing an under-observed run.
+- Capture-tool status is probed, not installed or elevated: on this machine (Windows 10, no admin rights, tshark/tcpdump/Npcap absent; built-in `pktmon` present but requires admin) capture is recorded as unavailable and **no packet evidence is produced — packet capture is UNVERIFIED in this environment**. FIN/RST/SYN and TCP retransmission are therefore reported only if actually captured.
