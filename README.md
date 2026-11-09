@@ -78,3 +78,32 @@ python observe_run.py            # cases: normal / early_close / insufficient
 - Evidence records carry `evidence_id`, `source` (`server_app`/`client_app`), wall-clock `ts` (same host clock, so server/client lines form one timeline), event type, and byte positions. Whitelist excludes file paths, file identifiers, SHA-256 values, injection records (`injection.jsonl` is kept apart as ground truth), and case names — so nothing reveals the answer to the diagnoser.
 - The `insufficient` case intentionally keeps only connection-accept/start events (no completion/interruption), representing an under-observed run.
 - Capture-tool status is probed, not installed or elevated: on this machine (Windows 10, no admin rights, tshark/tcpdump/Npcap absent; built-in `pktmon` present but requires admin) capture is recorded as unavailable and **no packet evidence is produced — packet capture is UNVERIFIED in this environment**. FIN/RST/SYN and TCP retransmission are therefore reported only if actually captured.
+
+## Iteration 3b — Solar diagnosis and evaluation
+
+`solar_diag.py` exposes two lookup tools to the model — `get_packet_summary(run_id)` (returns `available:false` + reason in this environment) and `get_app_log_events(run_id)` (whitelisted evidence) — sends only those observation results, and requires a structured verdict: `{diagnosis, evidence_ids, withheld, missing_evidence}`.
+
+```bash
+python solar_diag.py --all        # diagnose every run + score against predefined criteria
+python solar_diag.py --run <id>   # single run
+```
+
+Diagnosis states (scoped to what is actually observable): `early_connection_close` (close before expected size, e.g. `INTERRUPTED reason="connection closed"` / `CONNECTION_CLOSED file_pos < size`, optionally followed by `REQUEST offset>0`), `timeout_or_stall` (`recv timeout`), `no_failure_observed` (completion + hash verification, no interruption), `insufficient_evidence` (nothing conclusive → withholding judgment and naming missing evidence is the correct answer).
+
+Evaluation is predefined per case (expected diagnosis, expected withholding, supporting event types) and separates **evidence IDs existing** from **evidence actually supporting the diagnosis**. Python recovery outcomes are recorded in a separate column and never depend on the LLM or API state.
+
+Verification status (as of this commit):
+
+- **Mock verification: PASSED (3/3 cases)** — run without `UPSTAGE_API_KEY`, exercising the lookup tools, request building, response parsing, and scoring end-to-end with a local rule-based responder. This validates the pipeline only, **not** Solar's diagnostic quality.
+- **Real Solar API call: NOT YET RUN** — set `UPSTAGE_API_KEY` and run `python solar_diag.py --all` (or `--real`); results are stored and labeled separately from mock runs.
+- **Packet capture: UNVERIFIED** (see 3a); the `packet_loss` case (expected `timeout_or_stall`) is reserved for when loss injection is actually reproduced.
+
+Latest mock result table (Windows 10, Python 3.12.2; all three cases recovered successfully and hash-matched, recorded independently of the diagnosis):
+
+| Case | Expected | Mock diagnosis | Match | Withheld (exp/act) | IDs exist | Supports | Recovery |
+|---|---|---|---|---|---|---|---|
+| normal | no_failure_observed | no_failure_observed | O | no/no | O | O | success |
+| early_close | early_connection_close | early_connection_close | O | no/no | O | O | success |
+| insufficient | insufficient_evidence | insufficient_evidence | O | yes/yes | O | O | success |
+
+Parser/evaluator negative tests passed: rejects JSON-less and unknown-diagnosis responses, detects fabricated evidence IDs (exist=X), and distinguishes existing-but-unsupporting citations (exist=O / supports=X). Artifacts: `diag_artifacts/solar/<run>/` (`request.json`, `response_raw.txt`, `parsed.json`, `evaluation.json`).
