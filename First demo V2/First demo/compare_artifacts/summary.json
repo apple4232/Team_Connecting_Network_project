@@ -1,0 +1,116 @@
+{
+  "file_size": 4194304,
+  "file_sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c",
+  "inject_at": 1398101,
+  "client_settings": {
+    "timeout": 5.0,
+    "retries": 3,
+    "retry_delay": 0.5
+  },
+  "results": {
+    "restart": {
+      "mode": "restart",
+      "size_ok": true,
+      "sha256_ok": true,
+      "flow_ok": true,
+      "inject_count": 1,
+      "interrupted_saved": [
+        1398101
+      ],
+      "reconnect_offset": 0,
+      "recovery_ms": 47.0,
+      "recovered_bytes": 4194304,
+      "expected_bytes": 4194304,
+      "client_exit": 0,
+      "checks": [
+        [
+          true,
+          "크기 일치",
+          "size_ok=True"
+        ],
+        [
+          true,
+          "SHA-256 일치",
+          "sha256_ok=True"
+        ],
+        [
+          true,
+          "출력 흐름",
+          "Transfer started -> Connection interrupted -> Reconnected -> Resuming from byte -> Transfer completed -> SHA-256 verified"
+        ],
+        [
+          true,
+          "주입 정확히 1회",
+          "1건 (injection.jsonl)"
+        ],
+        [
+          true,
+          "재접속 offset == 0",
+          "offset=0"
+        ],
+        [
+          true,
+          "복구 후 데이터량 = 기대치(크기-offset)",
+          "집계 4194304 / 기대 4194304"
+        ],
+        [
+          true,
+          "복구 시간 측정",
+          "47.0 ms"
+        ]
+      ]
+    },
+    "resume": {
+      "mode": "resume",
+      "size_ok": true,
+      "sha256_ok": true,
+      "flow_ok": true,
+      "inject_count": 1,
+      "interrupted_saved": [
+        1398101
+      ],
+      "reconnect_offset": 1398101,
+      "recovery_ms": 0.0,
+      "recovered_bytes": 2796203,
+      "expected_bytes": 2796203,
+      "client_exit": 0,
+      "checks": [
+        [
+          true,
+          "크기 일치",
+          "size_ok=True"
+        ],
+        [
+          true,
+          "SHA-256 일치",
+          "sha256_ok=True"
+        ],
+        [
+          true,
+          "출력 흐름",
+          "Transfer started -> Connection interrupted -> Reconnected -> Resuming from byte -> Transfer completed -> SHA-256 verified"
+        ],
+        [
+          true,
+          "주입 정확히 1회",
+          "1건 (injection.jsonl)"
+        ],
+        [
+          true,
+          "재접속 offset > 0",
+          "offset=1398101, inject_at=1398101, 중단 시 저장=[1398101]"
+        ],
+        [
+          true,
+          "복구 후 데이터량 = 기대치(크기-offset)",
+          "집계 2796203 / 기대 2796203"
+        ],
+        [
+          true,
+          "복구 시간 측정",
+          "0.0 ms"
+        ]
+      ]
+    }
+  }
+}

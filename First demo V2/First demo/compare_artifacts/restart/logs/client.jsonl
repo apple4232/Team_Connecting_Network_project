@@ -1,0 +1,11 @@
+{"ts": "2026-11-10T21:53:34.425+09:00", "mono": 536077.453, "actor": "client", "class": "observation", "event": "CLIENT_START", "file_id": "testfile.bin", "output": "C:\\Users\\panto\\OneDrive\\바탕 화면\\Team_Connecting_Network_project-P0\\First Demo\\compare_artifacts\\restart\\received.bin", "retries": 3, "timeout": 5.0, "recovery_mode": "restart"}
+{"ts": "2026-11-10T21:53:34.452+09:00", "mono": 536077.468, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 0}
+{"ts": "2026-11-10T21:53:34.498+09:00", "mono": 536077.515, "actor": "client", "class": "observation", "event": "TRANSFER_START", "offset": 0, "expected_size": 4194304, "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c"}
+{"ts": "2026-11-10T21:53:34.502+09:00", "mono": 536077.515, "actor": "client", "class": "observation", "event": "INTERRUPTED", "reason": "connection closed", "saved_bytes": 1398101, "expected_size": 4194304}
+{"ts": "2026-11-10T21:53:35.008+09:00", "mono": 536078.031, "actor": "client", "class": "observation", "event": "RECONNECTED", "attempt": 1}
+{"ts": "2026-11-10T21:53:35.041+09:00", "mono": 536078.062, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 0}
+{"ts": "2026-11-10T21:53:35.041+09:00", "mono": 536078.062, "actor": "client", "class": "observation", "event": "RESUME_REQUEST", "offset": 0, "remaining": 4194304, "recovery_mode": "restart"}
+{"ts": "2026-11-10T21:53:35.041+09:00", "mono": 536078.062, "actor": "client", "class": "observation", "event": "RESTART_RESET", "discarded_bytes": 1398101, "recovery_mode": "restart"}
+{"ts": "2026-11-10T21:53:35.055+09:00", "mono": 536078.078, "actor": "client", "class": "observation", "event": "TRANSFER_COMPLETED", "bytes": 4194304}
+{"ts": "2026-11-10T21:53:35.063+09:00", "mono": 536078.078, "actor": "client", "class": "observation", "event": "SHA256_OK", "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c", "bytes": 4194304}
+{"ts": "2026-11-10T21:53:35.063+09:00", "mono": 536078.078, "actor": "client", "class": "observation", "event": "CLIENT_DONE", "output": "C:\\Users\\panto\\OneDrive\\바탕 화면\\Team_Connecting_Network_project-P0\\First Demo\\compare_artifacts\\restart\\received.bin", "bytes": 4194304}
