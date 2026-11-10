@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+
+# Generated transfer files, test files, and per-run raw logs
+demo_artifacts/
+compare_artifacts/
+diag_artifacts/
