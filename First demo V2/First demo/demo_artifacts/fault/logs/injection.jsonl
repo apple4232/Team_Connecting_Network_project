@@ -1,0 +1,1 @@
+{"ts": "2026-11-10T21:55:18.921+09:00", "mono": 536181.937, "actor": "server", "class": "injection", "event": "INJECT", "conn_id": 1, "inject_at": 1398101, "file_pos": 1398101, "file_id": "testfile.bin", "file_size": 4194304, "note": "cut this connection once at inject_at"}

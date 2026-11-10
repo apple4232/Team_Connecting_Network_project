@@ -1,0 +1,10 @@
+{"ts": "2026-11-10T21:55:18.823+09:00", "mono": 536181.843, "actor": "client", "class": "observation", "event": "CLIENT_START", "file_id": "testfile.bin", "output": "C:\\Users\\panto\\OneDrive\\바탕 화면\\Team_Connecting_Network_project-P0\\First Demo\\demo_artifacts\\fault\\received.bin", "retries": 3, "timeout": 5.0, "recovery_mode": "resume"}
+{"ts": "2026-11-10T21:55:18.855+09:00", "mono": 536181.875, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 0}
+{"ts": "2026-11-10T21:55:18.900+09:00", "mono": 536181.921, "actor": "client", "class": "observation", "event": "TRANSFER_START", "offset": 0, "expected_size": 4194304, "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c"}
+{"ts": "2026-11-10T21:55:18.922+09:00", "mono": 536181.937, "actor": "client", "class": "observation", "event": "INTERRUPTED", "reason": "connection closed", "saved_bytes": 1398101, "expected_size": 4194304}
+{"ts": "2026-11-10T21:55:19.424+09:00", "mono": 536182.437, "actor": "client", "class": "observation", "event": "RECONNECTED", "attempt": 1}
+{"ts": "2026-11-10T21:55:19.424+09:00", "mono": 536182.437, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 1398101}
+{"ts": "2026-11-10T21:55:19.426+09:00", "mono": 536182.453, "actor": "client", "class": "observation", "event": "RESUME_REQUEST", "offset": 1398101, "remaining": 2796203, "recovery_mode": "resume"}
+{"ts": "2026-11-10T21:55:19.432+09:00", "mono": 536182.453, "actor": "client", "class": "observation", "event": "TRANSFER_COMPLETED", "bytes": 4194304}
+{"ts": "2026-11-10T21:55:19.442+09:00", "mono": 536182.468, "actor": "client", "class": "observation", "event": "SHA256_OK", "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c", "bytes": 4194304}
+{"ts": "2026-11-10T21:55:19.444+09:00", "mono": 536182.468, "actor": "client", "class": "observation", "event": "CLIENT_DONE", "output": "C:\\Users\\panto\\OneDrive\\바탕 화면\\Team_Connecting_Network_project-P0\\First Demo\\demo_artifacts\\fault\\received.bin", "bytes": 4194304}
