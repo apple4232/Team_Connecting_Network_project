@@ -1,0 +1,6 @@
+{
+  "content": "{\"diagnosis\": \"no_failure_observed\", \"evidence_ids\": [\"E006\", \"E008\"], \"withheld\": false, \"missing_evidence\": []}",
+  "usage": null,
+  "finish": "mock",
+  "_mock": true
+}

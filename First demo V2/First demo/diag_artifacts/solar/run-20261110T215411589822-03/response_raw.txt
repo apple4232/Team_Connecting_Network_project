@@ -1,0 +1,6 @@
+{
+  "content": "{\"diagnosis\": \"insufficient_evidence\", \"evidence_ids\": [\"E002\"], \"withheld\": true, \"missing_evidence\": [\"전송 완료(TRANSFER_COMPLETED) 또는 중단(INTERRUPTED) 이벤트\", \"연결 종료 방향 관측(CONNECTION_CLOSED) 또는 패킷 캡처 요약\"]}",
+  "usage": null,
+  "finish": "mock",
+  "_mock": true
+}

@@ -1,0 +1,5 @@
+{"evidence_id": "E002", "source": "server_app", "ts": "2026-11-10T21:54:11.979+09:00", "event": "ACCEPTED", "conn_id": 1}
+{"evidence_id": "E004", "source": "client_app", "ts": "2026-11-10T21:54:11.992+09:00", "event": "TRANSFER_START", "expected_size": 4194304}
+{"evidence_id": "E005", "source": "server_app", "ts": "2026-11-10T21:54:11.992+09:00", "event": "SEND_START", "conn_id": 1, "offset": 0, "remaining": 4194304}
+{"evidence_id": "E012", "source": "server_app", "ts": "2026-11-10T21:54:12.496+09:00", "event": "ACCEPTED", "conn_id": 2}
+{"evidence_id": "E014", "source": "server_app", "ts": "2026-11-10T21:54:12.496+09:00", "event": "SEND_START", "conn_id": 2, "offset": 1398101, "remaining": 2796203}

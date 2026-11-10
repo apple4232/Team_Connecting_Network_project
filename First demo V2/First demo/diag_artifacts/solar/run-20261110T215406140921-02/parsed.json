@@ -1,0 +1,14 @@
+{
+  "diagnosis": "early_connection_close",
+  "evidence_ids": [
+    "E006",
+    "E007",
+    "E014",
+    "E002",
+    "E003",
+    "E009",
+    "E011"
+  ],
+  "withheld": false,
+  "missing_evidence": []
+}

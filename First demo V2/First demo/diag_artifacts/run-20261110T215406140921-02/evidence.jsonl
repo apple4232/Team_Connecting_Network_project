@@ -1,0 +1,15 @@
+{"evidence_id": "E001", "source": "server_app", "ts": "2026-11-10T21:54:06.646+09:00", "event": "ACCEPTED", "conn_id": 1}
+{"evidence_id": "E002", "source": "client_app", "ts": "2026-11-10T21:54:06.663+09:00", "event": "REQUEST", "offset": 0}
+{"evidence_id": "E003", "source": "server_app", "ts": "2026-11-10T21:54:06.663+09:00", "event": "REQUEST", "conn_id": 1, "offset": 0}
+{"evidence_id": "E004", "source": "server_app", "ts": "2026-11-10T21:54:06.712+09:00", "event": "SEND_START", "conn_id": 1, "offset": 0, "remaining": 4194304}
+{"evidence_id": "E005", "source": "client_app", "ts": "2026-11-10T21:54:06.713+09:00", "event": "TRANSFER_START", "expected_size": 4194304}
+{"evidence_id": "E006", "source": "client_app", "ts": "2026-11-10T21:54:06.728+09:00", "event": "INTERRUPTED", "reason": "connection closed", "saved_bytes": 1398101, "expected_size": 4194304}
+{"evidence_id": "E007", "source": "server_app", "ts": "2026-11-10T21:54:06.728+09:00", "event": "CONNECTION_CLOSED", "conn_id": 1, "by": "server", "file_pos": 1398101, "bytes_sent": 1398101}
+{"evidence_id": "E008", "source": "client_app", "ts": "2026-11-10T21:54:07.237+09:00", "event": "RECONNECTED", "attempt": 1}
+{"evidence_id": "E009", "source": "client_app", "ts": "2026-11-10T21:54:07.237+09:00", "event": "REQUEST", "offset": 1398101}
+{"evidence_id": "E010", "source": "server_app", "ts": "2026-11-10T21:54:07.237+09:00", "event": "ACCEPTED", "conn_id": 2}
+{"evidence_id": "E011", "source": "server_app", "ts": "2026-11-10T21:54:07.237+09:00", "event": "REQUEST", "conn_id": 2, "offset": 1398101}
+{"evidence_id": "E012", "source": "server_app", "ts": "2026-11-10T21:54:07.237+09:00", "event": "SEND_START", "conn_id": 2, "offset": 1398101, "remaining": 2796203}
+{"evidence_id": "E013", "source": "client_app", "ts": "2026-11-10T21:54:07.246+09:00", "event": "TRANSFER_COMPLETED", "bytes": 4194304}
+{"evidence_id": "E014", "source": "server_app", "ts": "2026-11-10T21:54:07.246+09:00", "event": "CONNECTION_CLOSED", "conn_id": 2, "by": "server", "file_pos": 4194304, "bytes_sent": 2796203}
+{"evidence_id": "E015", "source": "client_app", "ts": "2026-11-10T21:54:07.260+09:00", "event": "SHA256_OK", "bytes": 4194304}

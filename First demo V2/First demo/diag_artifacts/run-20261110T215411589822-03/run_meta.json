@@ -1,0 +1,25 @@
+{
+  "run_id": "run-20261110T215411589822-03",
+  "created": "20261110T215411589822",
+  "case": "insufficient",
+  "capture": {
+    "tools_detected": [
+      "dumpcap",
+      "tshark"
+    ],
+    "capture_status": "withheld",
+    "summary_status": "not_run",
+    "available": false,
+    "reason": "이 실행에는 패킷 관측이 없습니다"
+  },
+  "evidence_count": 5,
+  "client_exit": 0,
+  "recovered": true,
+  "final_hash_match": true,
+  "final_size_match": true,
+  "time_basis": "벽시계 ISO-8601(ts) — 서버·클라이언트 같은 호스트 시계",
+  "observation_points": [
+    "server_app",
+    "client_app"
+  ]
+}

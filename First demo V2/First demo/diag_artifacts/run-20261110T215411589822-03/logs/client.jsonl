@@ -1,0 +1,10 @@
+{"ts": "2026-11-10T21:54:11.963+09:00", "mono": 536114.984, "actor": "client", "class": "observation", "event": "CLIENT_START", "file_id": "testfile.bin", "output": "C:\\Users\\panto\\OneDrive\\바탕 화면\\Team_Connecting_Network_project-P0\\First Demo\\diag_artifacts\\run-20261110T215411589822-03\\received.bin", "retries": 3, "timeout": 5.0, "recovery_mode": "resume"}
+{"ts": "2026-11-10T21:54:11.979+09:00", "mono": 536115.0, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 0}
+{"ts": "2026-11-10T21:54:11.992+09:00", "mono": 536115.015, "actor": "client", "class": "observation", "event": "TRANSFER_START", "offset": 0, "expected_size": 4194304, "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c"}
+{"ts": "2026-11-10T21:54:11.995+09:00", "mono": 536115.015, "actor": "client", "class": "observation", "event": "INTERRUPTED", "reason": "connection closed", "saved_bytes": 1398101, "expected_size": 4194304}
+{"ts": "2026-11-10T21:54:12.496+09:00", "mono": 536115.515, "actor": "client", "class": "observation", "event": "RECONNECTED", "attempt": 1}
+{"ts": "2026-11-10T21:54:12.496+09:00", "mono": 536115.515, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 1398101}
+{"ts": "2026-11-10T21:54:12.496+09:00", "mono": 536115.515, "actor": "client", "class": "observation", "event": "RESUME_REQUEST", "offset": 1398101, "remaining": 2796203, "recovery_mode": "resume"}
+{"ts": "2026-11-10T21:54:12.496+09:00", "mono": 536115.515, "actor": "client", "class": "observation", "event": "TRANSFER_COMPLETED", "bytes": 4194304}
+{"ts": "2026-11-10T21:54:12.496+09:00", "mono": 536115.515, "actor": "client", "class": "observation", "event": "SHA256_OK", "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c", "bytes": 4194304}
+{"ts": "2026-11-10T21:54:12.496+09:00", "mono": 536115.515, "actor": "client", "class": "observation", "event": "CLIENT_DONE", "output": "C:\\Users\\panto\\OneDrive\\바탕 화면\\Team_Connecting_Network_project-P0\\First Demo\\diag_artifacts\\run-20261110T215411589822-03\\received.bin", "bytes": 4194304}

@@ -1,0 +1,19 @@
+{
+  "run_id": "run-20261110T215406140921-02",
+  "case": "early_close",
+  "expected_diagnosis": "early_connection_close",
+  "solar_diagnosis": "early_connection_close",
+  "diagnosis_match": true,
+  "expected_withheld": false,
+  "withheld": false,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "missing_evidence": [],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true
+  },
+  "mode": "모의 검증(MOCK)"
+}

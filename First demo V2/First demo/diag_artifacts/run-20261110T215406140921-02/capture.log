@@ -1,0 +1,4 @@
+Capturing on 'Adapter for loopback traffic capture'
+File: C:\Users\panto\OneDrive\바탕 화면\Team_Connecting_Network_project-P0\First Demo\diag_artifacts\run-20261110T215406140921-02\capture.pcapng
+Packets captured: 227
+Packets received/dropped on interface 'Adapter for loopback traffic capture': 227/0 (pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0) (100.0%)

@@ -1,0 +1,22 @@
+{
+  "run_id": "run-20261110T215411589822-03",
+  "case": "insufficient",
+  "expected_diagnosis": "insufficient_evidence",
+  "solar_diagnosis": "insufficient_evidence",
+  "diagnosis_match": true,
+  "expected_withheld": true,
+  "withheld": true,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "missing_evidence": [
+    "전송 완료(TRANSFER_COMPLETED) 또는 중단(INTERRUPTED) 이벤트",
+    "연결 종료 방향 관측(CONNECTION_CLOSED) 또는 패킷 캡처 요약"
+  ],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true
+  },
+  "mode": "모의 검증(MOCK)"
+}
