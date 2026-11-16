@@ -1,2 +1,0 @@
-[server] listening on 127.0.0.1:9280 file_id=testfile-20261116T185910091388.bin size=2097152 sha256=eaefffa09746b1efc56d262d9f27b2f9c3678f3907ba9410138283d26a3719b0
-[server] fault injection armed: stall for 2.5s at byte 699050 (once)

@@ -1,4 +1,0 @@
-Capturing on 'Adapter for loopback traffic capture'
-File: C:\Users\panto\OneDrive\문서\ChatGPT\네트워크 프로젝트\First Demo v3\First Demo\diag_artifacts\practice-size-02\run-20261116T185910110431-01\capture.pcapng
-Packets captured: 122
-Packets received/dropped on interface 'Adapter for loopback traffic capture': 122/0 (pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0) (100.0%)

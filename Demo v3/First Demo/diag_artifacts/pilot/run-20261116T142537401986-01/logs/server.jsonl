@@ -1,9 +1,0 @@
-{"ts": "2026-11-16T14:25:37.680+09:00", "mono": 347940.281, "actor": "server", "class": "observation", "event": "SERVER_START", "file": "C:\\Users\\panto\\OneDrive\\문서\\ChatGPT\\네트워크 프로젝트\\First Demo v3\\First Demo\\diag_artifacts\\pilot\\testfile-20261116T142537386676.bin", "file_id": "testfile-20261116T142537386676.bin", "size": 4194304, "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c", "port": 9280, "pid": 19256}
-{"ts": "2026-11-16T14:25:37.893+09:00", "mono": 347940.5, "actor": "server", "class": "observation", "event": "ACCEPTED", "conn_id": 1, "peer": "127.0.0.1:54509"}
-{"ts": "2026-11-16T14:25:37.893+09:00", "mono": 347940.5, "actor": "server", "class": "observation", "event": "REQUEST", "conn_id": 1, "file_id": "testfile-20261116T142537386676.bin", "offset": 0}
-{"ts": "2026-11-16T14:25:37.893+09:00", "mono": 347940.5, "actor": "server", "class": "observation", "event": "SEND_START", "conn_id": 1, "offset": 0, "remaining": 4194304}
-{"ts": "2026-11-16T14:25:37.893+09:00", "mono": 347940.5, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 1, "file_pos": 1048576, "bytes_sent": 1048576}
-{"ts": "2026-11-16T14:25:37.901+09:00", "mono": 347940.5, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 1, "file_pos": 2097152, "bytes_sent": 2097152}
-{"ts": "2026-11-16T14:25:37.901+09:00", "mono": 347940.5, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 1, "file_pos": 3145728, "bytes_sent": 3145728}
-{"ts": "2026-11-16T14:25:37.903+09:00", "mono": 347940.515, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 1, "file_pos": 4194304, "bytes_sent": 4194304}
-{"ts": "2026-11-16T14:25:37.903+09:00", "mono": 347940.515, "actor": "server", "class": "observation", "event": "CONNECTION_CLOSED", "conn_id": 1, "by": "server", "file_pos": 4194304, "bytes_sent": 4194304}
