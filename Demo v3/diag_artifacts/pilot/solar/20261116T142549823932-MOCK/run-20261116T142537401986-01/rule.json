@@ -1,0 +1,23 @@
+{
+  "run_id": "run-20261116T142537401986-01",
+  "case": "normal",
+  "expected_diagnosis": "no_failure_observed",
+  "solar_diagnosis": "no_failure_observed",
+  "diagnosis_match": true,
+  "expected_withheld": false,
+  "withheld": false,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "evidence_ids": [
+    "E009",
+    "E012"
+  ],
+  "missing_evidence": [],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 0
+  }
+}
