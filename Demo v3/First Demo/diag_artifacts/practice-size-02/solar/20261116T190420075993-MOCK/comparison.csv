@@ -1,0 +1,2 @@
+﻿run_id,case,expected,rule_diagnosis,rule_correct,rule_evidence_ids,rule_evidence_supports,solar_model,solar_diagnosis,solar_correct,solar_evidence_ids,solar_evidence_ids_exist,solar_evidence_supports,solar_withheld,solar_missing_evidence,solar_error,transfer_verified,resume_offset,human_review
+run-20261116T185910110431-01,stall,timeout_or_stall,timeout_or_stall,True,E007,True,,,,,,,,,,True,699050,

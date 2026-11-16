@@ -1,0 +1,4 @@
+﻿run_id,case,expected,rule_diagnosis,rule_correct,rule_evidence_ids,rule_evidence_supports,solar_model,solar_diagnosis,solar_correct,solar_evidence_ids,solar_evidence_ids_exist,solar_evidence_supports,solar_withheld,solar_missing_evidence,solar_error,transfer_verified,resume_offset,human_review
+run-20261116T142537401986-01,normal,no_failure_observed,no_failure_observed,True,E009 E012,True,,,,,,,,,,True,0,
+run-20261116T142542828435-02,early_close,early_connection_close,early_connection_close,True,E003,True,,,,,,,,,,True,1398101,
+run-20261116T142548334238-03,insufficient,insufficient_evidence,insufficient_evidence,True,,True,,,,,,,,,,True,1398101,

@@ -1,0 +1,22 @@
+{
+  "run_id": "run-20261116T142548334238-03",
+  "case": "insufficient",
+  "expected_diagnosis": "insufficient_evidence",
+  "solar_diagnosis": "insufficient_evidence",
+  "diagnosis_match": true,
+  "expected_withheld": true,
+  "withheld": true,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "evidence_ids": [],
+  "missing_evidence": [
+    "전송을 완료했거나 중단한 이유를 확인할 수 있는 관측 이벤트"
+  ],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 1398101
+  }
+}
