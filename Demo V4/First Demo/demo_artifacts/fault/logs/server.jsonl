@@ -1,0 +1,13 @@
+{"ts": "2026-11-18T22:03:50.342+09:00", "mono": 13870.722034, "actor": "server", "class": "observation", "event": "SERVER_START", "file": "C:\\Users\\jw410\\Downloads\\Demo V4\\First Demo\\demo_artifacts\\testfile.bin", "file_id": "testfile.bin", "size": 4194304, "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c", "port": 9231, "pid": 22352}
+{"ts": "2026-11-18T22:03:50.630+09:00", "mono": 13871.010487, "actor": "server", "class": "observation", "event": "ACCEPTED", "conn_id": 1, "peer": "127.0.0.1:59504"}
+{"ts": "2026-11-18T22:03:50.647+09:00", "mono": 13871.026954, "actor": "server", "class": "observation", "event": "REQUEST", "conn_id": 1, "file_id": "testfile.bin", "offset": 0}
+{"ts": "2026-11-18T22:03:50.661+09:00", "mono": 13871.040925, "actor": "server", "class": "observation", "event": "SEND_START", "conn_id": 1, "offset": 0, "remaining": 4194304}
+{"ts": "2026-11-18T22:03:50.679+09:00", "mono": 13871.059511, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 1, "file_pos": 1048576, "bytes_sent": 1048576}
+{"ts": "2026-11-18T22:03:50.683+09:00", "mono": 13871.062774, "actor": "server", "class": "observation", "event": "CONNECTION_CLOSED", "conn_id": 1, "by": "server", "file_pos": 1398101, "bytes_sent": 1398101}
+{"ts": "2026-11-18T22:03:51.188+09:00", "mono": 13871.568144, "actor": "server", "class": "observation", "event": "ACCEPTED", "conn_id": 2, "peer": "127.0.0.1:59505"}
+{"ts": "2026-11-18T22:03:51.202+09:00", "mono": 13871.582028, "actor": "server", "class": "observation", "event": "REQUEST", "conn_id": 2, "file_id": "testfile.bin", "offset": 1398101}
+{"ts": "2026-11-18T22:03:51.203+09:00", "mono": 13871.583415, "actor": "server", "class": "observation", "event": "SEND_START", "conn_id": 2, "offset": 1398101, "remaining": 2796203}
+{"ts": "2026-11-18T22:03:51.208+09:00", "mono": 13871.587654, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 2, "file_pos": 2446677, "bytes_sent": 1048576}
+{"ts": "2026-11-18T22:03:51.210+09:00", "mono": 13871.590207, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 2, "file_pos": 3495253, "bytes_sent": 2097152}
+{"ts": "2026-11-18T22:03:51.212+09:00", "mono": 13871.59167, "actor": "server", "class": "observation", "event": "SEND_PROGRESS", "conn_id": 2, "file_pos": 4194304, "bytes_sent": 2796203}
+{"ts": "2026-11-18T22:03:51.213+09:00", "mono": 13871.592679, "actor": "server", "class": "observation", "event": "CONNECTION_CLOSED", "conn_id": 2, "by": "server", "file_pos": 4194304, "bytes_sent": 2796203}

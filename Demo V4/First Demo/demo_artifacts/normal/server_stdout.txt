@@ -1,0 +1,1 @@
+[server] listening on 127.0.0.1:9230 file_id=testfile.bin size=4194304 sha256=5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c

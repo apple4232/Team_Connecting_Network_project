@@ -1,0 +1,10 @@
+{"ts": "2026-11-18T22:03:50.622+09:00", "mono": 13871.001948, "actor": "client", "class": "observation", "event": "CLIENT_START", "file_id": "testfile.bin", "output": "C:\\Users\\jw410\\Downloads\\Demo V4\\First Demo\\demo_artifacts\\fault\\received.bin", "retries": 3, "timeout": 5.0, "recovery_mode": "resume"}
+{"ts": "2026-11-18T22:03:50.647+09:00", "mono": 13871.026914, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 0}
+{"ts": "2026-11-18T22:03:50.661+09:00", "mono": 13871.041058, "actor": "client", "class": "observation", "event": "TRANSFER_START", "offset": 0, "expected_size": 4194304, "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c"}
+{"ts": "2026-11-18T22:03:50.685+09:00", "mono": 13871.065456, "actor": "client", "class": "observation", "event": "INTERRUPTED", "reason": "connection closed", "saved_bytes": 1398101, "expected_size": 4194304}
+{"ts": "2026-11-18T22:03:51.200+09:00", "mono": 13871.579868, "actor": "client", "class": "observation", "event": "RECONNECTED", "attempt": 1}
+{"ts": "2026-11-18T22:03:51.202+09:00", "mono": 13871.581854, "actor": "client", "class": "observation", "event": "REQUEST", "file_id": "testfile.bin", "offset": 1398101}
+{"ts": "2026-11-18T22:03:51.203+09:00", "mono": 13871.583529, "actor": "client", "class": "observation", "event": "RESUME_REQUEST", "offset": 1398101, "remaining": 2796203, "recovery_mode": "resume"}
+{"ts": "2026-11-18T22:03:51.213+09:00", "mono": 13871.592574, "actor": "client", "class": "observation", "event": "TRANSFER_COMPLETED", "bytes": 4194304}
+{"ts": "2026-11-18T22:03:51.227+09:00", "mono": 13871.607042, "actor": "client", "class": "observation", "event": "SHA256_OK", "sha256": "5bf7ee3df5f41ea7cc9bf56f6103e6c6b2faffb07a15070141ef4be673e55f4c", "bytes": 4194304}
+{"ts": "2026-11-18T22:03:51.229+09:00", "mono": 13871.609254, "actor": "client", "class": "observation", "event": "CLIENT_DONE", "output": "C:\\Users\\jw410\\Downloads\\Demo V4\\First Demo\\demo_artifacts\\fault\\received.bin", "bytes": 4194304}
