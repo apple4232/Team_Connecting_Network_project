@@ -1,0 +1,1 @@
+{"ts": "2026-11-18T22:07:21.833+09:00", "mono": 14082.21198, "actor": "server", "class": "injection", "event": "STALL", "conn_id": 1, "file_pos": 1398101, "stall_seconds": 2.5}
