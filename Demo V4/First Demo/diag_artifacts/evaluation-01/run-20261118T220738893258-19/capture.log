@@ -1,0 +1,4 @@
+Capturing on 'Adapter for loopback traffic capture'
+File: C:\Users\jw410\Downloads\Demo V4\First Demo\diag_artifacts\evaluation-01\run-20261118T220738893258-19\capture.pcapng
+Packets captured: 225
+Packets received/dropped on interface 'Adapter for loopback traffic capture': 225/0 (pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0) (100.0%)
