@@ -1,0 +1,22 @@
+{
+  "run_id": "run-20261118T220628039378-03",
+  "case": "stall",
+  "expected_diagnosis": "timeout_or_stall",
+  "solar_diagnosis": "timeout_or_stall",
+  "diagnosis_match": true,
+  "expected_withheld": false,
+  "withheld": false,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "evidence_ids": [
+    "E009"
+  ],
+  "missing_evidence": [],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 1398101
+  }
+}
