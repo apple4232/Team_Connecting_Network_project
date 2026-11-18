@@ -1,0 +1,129 @@
+{
+  "available": true,
+  "packet_count": 210,
+  "streams": [
+    {
+      "tcp_stream": 0,
+      "packet_count": 69,
+      "syn": 1,
+      "syn_ack": 1,
+      "fin": 2,
+      "rst": 0,
+      "suspected_retransmissions": 0
+    },
+    {
+      "tcp_stream": 1,
+      "packet_count": 141,
+      "syn": 1,
+      "syn_ack": 1,
+      "fin": 2,
+      "rst": 0,
+      "suspected_retransmissions": 0
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "P1",
+      "source": "packet",
+      "frame_number": 1,
+      "ts": "2026-11-18T13:06:46.412654+00:00",
+      "tcp_stream": 0,
+      "direction": "client_to_server",
+      "tcp_flags": [
+        "SYN"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P2",
+      "source": "packet",
+      "frame_number": 2,
+      "ts": "2026-11-18T13:06:46.412800+00:00",
+      "tcp_stream": 0,
+      "direction": "server_to_client",
+      "tcp_flags": [
+        "SYN",
+        "ACK"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P66",
+      "source": "packet",
+      "frame_number": 66,
+      "ts": "2026-11-18T13:06:47.439082+00:00",
+      "tcp_stream": 0,
+      "direction": "client_to_server",
+      "tcp_flags": [
+        "ACK",
+        "FIN"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P68",
+      "source": "packet",
+      "frame_number": 68,
+      "ts": "2026-11-18T13:06:47.440885+00:00",
+      "tcp_stream": 0,
+      "direction": "server_to_client",
+      "tcp_flags": [
+        "ACK",
+        "FIN"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P70",
+      "source": "packet",
+      "frame_number": 70,
+      "ts": "2026-11-18T13:06:47.943020+00:00",
+      "tcp_stream": 1,
+      "direction": "client_to_server",
+      "tcp_flags": [
+        "SYN"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P71",
+      "source": "packet",
+      "frame_number": 71,
+      "ts": "2026-11-18T13:06:47.943217+00:00",
+      "tcp_stream": 1,
+      "direction": "server_to_client",
+      "tcp_flags": [
+        "SYN",
+        "ACK"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P207",
+      "source": "packet",
+      "frame_number": 207,
+      "ts": "2026-11-18T13:06:47.970307+00:00",
+      "tcp_stream": 1,
+      "direction": "client_to_server",
+      "tcp_flags": [
+        "ACK",
+        "FIN"
+      ],
+      "suspected_retransmission": false
+    },
+    {
+      "evidence_id": "P209",
+      "source": "packet",
+      "frame_number": 209,
+      "ts": "2026-11-18T13:06:47.972284+00:00",
+      "tcp_stream": 1,
+      "direction": "server_to_client",
+      "tcp_flags": [
+        "ACK",
+        "FIN"
+      ],
+      "suspected_retransmission": false
+    }
+  ],
+  "omitted_evidence_count": 0
+}
