@@ -1,0 +1,27 @@
+{
+  "run_id": "run-20261110T212418599998-02",
+  "created": "20261110T212418599998",
+  "case": "early_close",
+  "capture": {
+    "tools_detected": [
+      "dumpcap",
+      "tshark"
+    ],
+    "capture_status": "captured",
+    "summary_status": "ready",
+    "available": true,
+    "reason": null,
+    "capture_file": "capture.pcapng",
+    "summary_file": "packet_summary.json"
+  },
+  "evidence_count": 15,
+  "client_exit": 0,
+  "recovered": true,
+  "final_hash_match": true,
+  "final_size_match": true,
+  "time_basis": "벽시계 ISO-8601(ts) — 서버·클라이언트 같은 호스트 시계",
+  "observation_points": [
+    "server_app",
+    "client_app"
+  ]
+}
