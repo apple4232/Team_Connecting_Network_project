@@ -1,0 +1,24 @@
+{
+  "run_id": "run-20261124T113137468384-01",
+  "case": "early_close",
+  "expected_diagnosis": "early_connection_close",
+  "solar_diagnosis": "no_failure_observed",
+  "diagnosis_match": false,
+  "expected_withheld": false,
+  "withheld": false,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": false,
+  "evidence_ids": [
+    "E016",
+    "E019"
+  ],
+  "missing_evidence": [],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 1398101
+  },
+  "model": "solar-pro4-260806"
+}

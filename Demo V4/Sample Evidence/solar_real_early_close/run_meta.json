@@ -1,0 +1,46 @@
+{
+  "run_id": "run-20261124T113327894315-01",
+  "created": "20261124T113327894315",
+  "case": "early_close",
+  "capture": {
+    "tools_detected": [
+      "dumpcap",
+      "tshark"
+    ],
+    "capture_status": "not_requested",
+    "summary_status": "not_run",
+    "available": false,
+    "reason": "이 실행에서 패킷 캡처를 요청하지 않았습니다"
+  },
+  "evidence_count": 19,
+  "client_exit": 0,
+  "recovered": true,
+  "final_hash_match": true,
+  "final_size_match": true,
+  "scenario_reproduced": true,
+  "resume_offset": 1398101,
+  "interruptions": [
+    "connection closed"
+  ],
+  "recovery_decisions": [
+    {
+      "ts": "2026-11-24T11:33:30.436+09:00",
+      "mono": 128474.578,
+      "actor": "client",
+      "class": "observation",
+      "event": "RECOVERY_DECISION",
+      "attempt": 1,
+      "strategy": "resume",
+      "source": "solar",
+      "reason": "saved_bytes와 expected_saved_bytes가 1398101로 일치하므로, 중단된 지점부터 재개하는 resume 전략이 적합합니다. 서버 파일 식별값은 재접속 후 Python이 검증합니다.",
+      "saved_bytes": 1398101,
+      "expected_saved_bytes": 1398101,
+      "retries_left": 3
+    }
+  ],
+  "time_basis": "벽시계 ISO-8601(ts) — 서버·클라이언트 같은 호스트 시계",
+  "observation_points": [
+    "server_app",
+    "client_app"
+  ]
+}

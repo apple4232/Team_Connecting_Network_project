@@ -1,0 +1,19 @@
+{
+  "mode": "REAL",
+  "model": "solar-pro4",
+  "passed": false,
+  "observation_exit": 0,
+  "diagnosis_exit": 1,
+  "runs": [
+    {
+      "run_id": "run-20261124T113137468384-01",
+      "case": "early_close",
+      "solar_advice_requested": true,
+      "solar_advice_received": true,
+      "solar_strategy_applied": true,
+      "strategy_verified": true,
+      "transfer_verified": true,
+      "scenario_reproduced": true
+    }
+  ]
+}

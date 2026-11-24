@@ -26,6 +26,43 @@ cd "First Demo"
 
 ## v3 실험 순서
 
+### 2026년 11월 24일 실제 Solar 연동 결과
+
+조기 종료 사례 1회에서 실제 `solar-pro4`의 `resume` 제안을 Python이 적용하고, 1,398,101바이트부터 이어받아 4,194,304바이트 파일의 크기와 SHA-256 일치를 확인했습니다. 전송 후 실제 Solar는 `early_connection_close`로 진단했고, 정답·인용 ID 존재·근거 지지·판단 보류 여부의 평가 기준을 충족했습니다. 실제 응답 모델은 `solar-pro4-260806`입니다.
+
+| 확인 항목 | 결과 |
+|---|---|
+| 실제 복구 전략 응답 및 적용 | `resume`, `source=solar` |
+| 이어받기 위치 | 1,398,101 B |
+| 최종 파일 검증 | 크기 및 SHA-256 일치 |
+| 실제 장애 진단 | `early_connection_close` |
+| 근거 평가 | 인용 ID 존재 및 진단 지지 통과 |
+| 패킷 캡처 | 이번 실행에서는 요청하지 않음 |
+
+[실제 응답과 로그](Sample%20Evidence/solar_real_early_close/)에서 결과를 확인할 수 있습니다. 앞선 실행에서 Solar는 완료·해시 검증 이벤트만 인용해 `no_failure_observed`로 오판했습니다. 전체 관측 구간의 중단을 진단하도록 지침을 보완한 후 새 실행에서 위 결과를 얻었습니다. 각 실행의 원래 요청·응답과 결과표를 함께 보관했습니다. 현재 실제 연동 검증 범위는 조기 종료이며, 정상·시간 초과·증거 부족 조건의 반복 평가는 후속 과제입니다.
+
+### 실제 Solar 진단과 복구 전략 제안 통합 실행
+
+`First Demo` 폴더에서 아래 명령을 실행합니다. 환경 변수에 키가 없으면 가려진 입력창에서 API 키를 입력합니다. 기본 조기 종료 사례는 복구 전략 제안과 사후 장애 진단으로 실제 API를 총 두 번 요청합니다.
+
+```powershell
+python solar_demo.py
+```
+
+정상·조기 종료·수신 시간 초과·증거 부족을 모두 확인하려면 다음과 같이 실행합니다. 기본 전략 제안 횟수는 3회, 사후 진단 횟수는 4회입니다.
+
+```powershell
+python solar_demo.py --case normal early_close stall insufficient
+```
+
+패킷 캡처를 함께 요청하려면 `--capture-interface '\Device\NPF_Loopback'`을 추가합니다. 결과는 실행마다 새 시스템 임시 폴더에 저장하며 터미널에 경로를 표시합니다. `--art-dir`로 새 결과 폴더를 지정할 수도 있습니다.
+
+`solar_demo_summary.json`에는 실제 응답 수신, Solar 제안 적용, 파일 검증을 기록합니다. 실패 후 기본 설정으로 복구한 경우에도 `solar_strategy_applied`가 false여서 전체 성공으로 집계되지 않습니다. 정상 전송은 전략 제안이 필요하지 않습니다. 실제 진단 결과는 `solar/<시각>-REAL/comparison.csv`에 기록합니다.
+
+`logs/client.jsonl`의 `SOLAR_ADVICE_REQUEST`, `SOLAR_ADVICE_RESPONSE`, `SOLAR_ADVICE_FAILED`에 제안 요청, 실제 응답과 모델·토큰 사용량·경과 시간, 실패 사유를 기록합니다. 최종 적용 여부는 `RECOVERY_DECISION`의 `source=solar`로 확인합니다. 이 기록은 사후 진단용 허용 이벤트 목록에서 제외되어, 진단 입력에는 기존 관측 자료만 전달됩니다. 전략 제안은 기존 설정대로 최대 3초 기다리고, 실패하면 Python이 기본 복구 설정을 적용합니다.
+
+오프라인 검사는 `python test_recovery_strategy.py`와 `python test_solar_diagnosis.py`로 실행합니다. 외부 응답을 대체해 실제 호출 경로의 요청 형식, 기록, 오류 처리와 채점을 검사하며 실제 Solar 성능은 별도 호출 결과로 확인해야 합니다.
+
 VS Code에서 이 프로젝트를 열고 내장 터미널을 PowerShell로 선택합니다. 아래 명령은 `First Demo` 폴더에서 한 줄씩 실행하세요. `python --version`으로 Python이 실행되는지 확인합니다. VS Code에서 이미 `$py`에 Python 경로를 설정했다면, 아래 명령의 `python`을 `& $py`로 바꿔 실행하세요.
 
 ### 1. 기존 세 사례로 실제 Solar 확인
@@ -227,7 +264,7 @@ python solar_diag.py --run <id>   # 지정한 실행 하나만 진단
 ### 검증 현황
 
 - **v2 모의 검증 3/3 통과.** 로컬 규칙 기반 응답으로 아래 세 사례의 처리 흐름을 확인했습니다. v3의 네 사례 검증 절차는 문서 위쪽에 있습니다.
-- **실제 Solar API 호출은 검증 대기 중입니다.** `UPSTAGE_API_KEY`를 설정하고 `python solar_diag.py --all --real`을 실행해 확인할 수 있습니다. 진단을 실행할 때마다 별도의 시각별 폴더에 결과를 저장합니다.
+- **실제 Solar API 연동을 조기 종료 사례에서 확인했습니다.** 실제 전략 적용과 사후 장애 진단 모두 통과했습니다. 위쪽 실제 연동 결과와 샘플을 참고하세요. `python solar_diag.py --all --real`은 지정한 관측 자료를 실제 모델로 진단하며, 실행마다 별도의 시각별 폴더에 결과를 저장합니다.
 - **정상 전송과 조기 종료의 루프백 캡처를 확인했습니다.** 조기 종료 사례는 서버가 전송 중 소켓을 닫아 재현합니다. 통제된 패킷 손실은 별도 실험입니다.
 
 아래는 Windows 10과 Python 3.12.2에서 실행한 모의 결과입니다. 세 사례 모두 최종 파일의 해시가 원본과 일치했습니다. 파일 전송 결과는 진단 결과와 별도로 기록했습니다.
