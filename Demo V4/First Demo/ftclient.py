@@ -116,7 +116,7 @@ def receive_attempt(temp: pathlib.Path, log: JsonlLog, args: argparse.Namespace,
 def transfer(out: pathlib.Path, temp: pathlib.Path, log: JsonlLog,
              args: argparse.Namespace) -> int:
     strategy_source = getattr(args, "strategy_source", "fixed")
-    advisor = {"mock": mock_proposal, "solar": solar_proposal}.get(strategy_source)
+    advisor = {"mock": mock_proposal, "solar": partial(solar_proposal, log=log)}.get(strategy_source)
     meta = receive_with_recovery(
         temp, log, partial(receive_attempt, temp, log, args),
         recovery_mode=args.recovery_mode, retries=args.retries, retry_delay=args.retry_delay,

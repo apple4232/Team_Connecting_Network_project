@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from concurrent.futures import Future
 from dataclasses import asdict
 from threading import Thread
 from urllib.error import HTTPError
 
+from ftprotocol import JsonlLog
 from recovery_policy import AdviceUnavailable, RECOVERY_MODES, RecoveryContext
 from solar_diag import API_KEY_ENV, SOLAR_MODEL, call_solar
 
@@ -20,7 +22,7 @@ SYSTEM_PROMPT = (
 )
 
 
-def solar_proposal(context: RecoveryContext) -> str:
+def solar_proposal(context: RecoveryContext, *, log: JsonlLog | None = None) -> str:
     key = os.environ.get(API_KEY_ENV, "").strip()
     if not key:
         raise AdviceUnavailable(f"{API_KEY_ENV} 미설정")
@@ -45,6 +47,10 @@ def solar_proposal(context: RecoveryContext) -> str:
         }},
     }
     response: Future[dict] = Future()
+    started = time.monotonic()
+    if log is not None:
+        log.write("SOLAR_ADVICE_REQUEST", model=SOLAR_MODEL, request=request,
+                  timeout_seconds=SOLAR_WAIT)
 
     def fetch() -> None:
         try:
@@ -55,13 +61,27 @@ def solar_proposal(context: RecoveryContext) -> str:
     # 소켓 시간 제한과 별개로, 재접속이 응답 때문에 지연되는 시간을 제한한다.
     Thread(target=fetch, daemon=True).start()
     try:
-        return response.result(timeout=SOLAR_WAIT)["content"]
+        result = response.result(timeout=SOLAR_WAIT)
+        content = result["content"]
+        if not isinstance(content, str) or not content.strip():
+            raise ValueError("empty response")
     except TimeoutError:
-        raise AdviceUnavailable("Solar 응답 대기 시간 초과") from None
+        reason = "Solar 응답 대기 시간 초과"
     except HTTPError as exc:
         exc.close()
-        raise AdviceUnavailable(f"Solar HTTP {exc.code}") from None
+        reason = f"Solar HTTP {exc.code}"
     except OSError:
-        raise AdviceUnavailable("Solar 연결 오류") from None
+        reason = "Solar 연결 오류"
     except (KeyError, IndexError, TypeError, ValueError):
-        raise AdviceUnavailable("Solar 응답을 해석할 수 없습니다") from None
+        reason = "Solar 응답을 해석할 수 없습니다"
+    else:
+        if log is not None:
+            log.write("SOLAR_ADVICE_RESPONSE", model=result.get("model") or SOLAR_MODEL,
+                      request_id=result.get("request_id"),
+                      content=content.replace(key, "[REDACTED]"), usage=result.get("usage"),
+                      finish=result.get("finish"), elapsed_ms=(time.monotonic() - started) * 1000)
+        return content
+    if log is not None:
+        log.write("SOLAR_ADVICE_FAILED", reason=reason,
+                  elapsed_ms=(time.monotonic() - started) * 1000)
+    raise AdviceUnavailable(reason)

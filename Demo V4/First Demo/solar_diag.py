@@ -73,6 +73,15 @@ INTERRUPTION_LABELS = {
 
 SYSTEM_PROMPT = """당신은 네트워크 파일 전송 로그 진단기다. 아래 조회 도구 결과만을 근거로 진단한다.
 
+판정 대상은 관측 구간 전체에서 발생한 장애다. 첫 연결부터 재접속과 최종 검증까지
+시간순으로 검토하라. 복구 후 완료·해시 검증 성공은 복구 결과를 나타낸다.
+예상 크기 이전에 connection closed/reset으로 중단된 INTERRUPTED가 있으면,
+이후 전송 완료 여부와 관계없이 early_connection_close를 선택하라.
+recv timeout으로 중단된 INTERRUPTED가 있으면 이후 복구 여부와 관계없이
+timeout_or_stall을 선택하라. 서로 다른 중단 유형이 함께 관측되면 판단을 보류하라.
+no_failure_observed는 관측 전체에 INTERRUPTED와 ATTEMPT_FAILED가 하나도 없고,
+TRANSFER_COMPLETED와 SHA256_OK가 모두 있을 때만 선택하라.
+
 조회 도구(2개):
 - get_packet_summary: 패킷 캡처 요약. available=true 이면 TCP 스트림별 집계 및
   실제 프레임을 가리키는 P로 시작하는 evidence_id가 포함된다.
@@ -165,9 +174,15 @@ def call_solar(request: dict, api_key: str, *, timeout: float = 60) -> dict:
                  "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         body = json.loads(resp.read().decode("utf-8"))
-    return {"content": body["choices"][0]["message"]["content"],
+    choice = body["choices"][0]
+    content = choice["message"]["content"]
+    if not isinstance(content, str) or not content.strip():
+        raise ValueError("Solar 응답에 텍스트 본문이 없습니다")
+    if choice.get("finish_reason") == "length":
+        raise ValueError("Solar 응답이 토큰 한도에서 잘렸습니다")
+    return {"content": content, "request_id": body.get("id"),
             "usage": body.get("usage"), "model": body.get("model"),
-            "finish": body["choices"][0].get("finish_reason")}
+            "finish": choice.get("finish_reason")}
 
 
 def mock_solar(request: dict) -> dict:
@@ -229,6 +244,8 @@ def parse_diagnosis(raw_content: str) -> dict:
     if start < 0 or end <= start:
         raise ValueError(f"JSON 객체를 찾을 수 없음: {raw_content[:200]!r}")
     parsed = json.loads(text[start:end + 1])
+    if not isinstance(parsed, dict):
+        raise ValueError("진단 응답은 JSON 객체여야 합니다")
     if parsed.get("diagnosis") not in STATUSES:
         raise ValueError(f"알 수 없는 diagnosis: {parsed.get('diagnosis')!r}")
     if type(parsed.get("withheld")) is not bool:

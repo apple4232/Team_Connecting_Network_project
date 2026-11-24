@@ -14,7 +14,10 @@ from urllib.error import HTTPError
 
 import ftclient
 import solar_recovery
+import solar_diag
 from demo import load_jsonl
+from ftprotocol import JsonlLog
+from recovery_policy import AdviceUnavailable, RecoveryContext
 
 DATA = b"Check the proposed recovery strategy."
 CUT = 9
@@ -177,6 +180,56 @@ class RecoveryStrategyTest(unittest.TestCase):
         self.assertEqual((status, offsets), (0, [0, CUT]))
         self.assertEqual((decisions[0]["source"], decisions[0]["reason"]),
                          ("fallback", "Solar 응답 대기 시간 초과"))
+
+    def test_real_proposal_records_response_without_credentials(self):
+        context = RecoveryContext("connection closed", CUT, CUT, len(DATA), 2)
+        result = {"content": '{"strategy":"resume","reason":"saved bytes match"}',
+                  "model": "fixture-model", "usage": {"total_tokens": 30}, "finish": "stop"}
+        with tempfile.TemporaryDirectory() as directory:
+            path = pathlib.Path(directory) / "client.jsonl"
+            log = JsonlLog(path, "client", "observation")
+            with patch.dict(
+                    solar_recovery.os.environ, {solar_recovery.API_KEY_ENV: "fixture-secret"}), \
+                    patch.object(solar_recovery, "call_solar", return_value=result):
+                self.assertEqual(solar_recovery.solar_proposal(context, log=log), result["content"])
+            events = load_jsonl(path)
+            self.assertEqual([e["event"] for e in events],
+                             ["SOLAR_ADVICE_REQUEST", "SOLAR_ADVICE_RESPONSE"])
+            self.assertEqual(events[-1]["model"], "fixture-model")
+            self.assertNotIn("fixture-secret", path.read_text(encoding="utf-8"))
+
+    def test_empty_real_response_records_failure(self):
+        context = RecoveryContext("connection closed", CUT, CUT, len(DATA), 2)
+        with tempfile.TemporaryDirectory() as directory:
+            path = pathlib.Path(directory) / "client.jsonl"
+            log = JsonlLog(path, "client", "observation")
+            with patch.dict(
+                    solar_recovery.os.environ, {solar_recovery.API_KEY_ENV: "fixture-secret"}), \
+                    patch.object(solar_recovery, "call_solar", return_value={"content": ""}):
+                with self.assertRaises(AdviceUnavailable):
+                    solar_recovery.solar_proposal(context, log=log)
+            self.assertEqual(load_jsonl(path)[-1]["event"], "SOLAR_ADVICE_FAILED")
+
+    def test_real_http_payload_and_truncated_response(self):
+        request = {"model": "solar-pro4", "messages": [{"role": "user", "content": "OK"}]}
+        body = {"id": "fixture-request", "model": "fixture-model", "usage": {},
+                "choices": [{"message": {"content": "OK"}, "finish_reason": "stop"}]}
+        for finish in ("stop", "length"):
+            with self.subTest(finish=finish):
+                body["choices"][0]["finish_reason"] = finish
+                with patch.object(solar_diag.urllib.request, "urlopen") as opened:
+                    opened.return_value.__enter__.return_value.read.return_value = json.dumps(body).encode()
+                    if finish == "length":
+                        with self.assertRaises(ValueError):
+                            solar_diag.call_solar(request, "fixture-secret")
+                    else:
+                        result = solar_diag.call_solar(request, "fixture-secret")
+                        self.assertEqual(result["request_id"], "fixture-request")
+                        self.assertEqual(result["content"], "OK")
+                    sent = opened.call_args.args[0]
+                    self.assertEqual(sent.full_url, "https://api.upstage.ai/v1/chat/completions")
+                    self.assertEqual(json.loads(sent.data), request)
+                    self.assertEqual(sent.get_header("Authorization"), "Bearer fixture-secret")
 
 
 if __name__ == "__main__":
