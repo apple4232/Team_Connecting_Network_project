@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"diagnosis\": \"insufficient_evidence\",\n  \"evidence_ids\": [],\n  \"withheld\": true,\n  \"missing_evidence\": [\"패킷 관측 없음으로 TCP 중단 유형(연결 종료/리셋/recv timeout) 확인 불가, 전송 완료(TRANSFER_COMPLETED) 및 SHA256 검증(SHA256_OK) 이벤트 미관측, 재접속 후 전송 결과 및 최종 검증 결과 부재\"]\n}",
+  "request_id": "d53d6ebf-7a82-4243-86cf-afef3ad9574a",
+  "usage": {
+    "prompt_tokens": 991,
+    "completion_tokens": 89,
+    "total_tokens": 1080,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}

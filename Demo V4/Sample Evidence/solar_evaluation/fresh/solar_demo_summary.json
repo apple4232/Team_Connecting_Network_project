@@ -1,0 +1,49 @@
+{
+  "mode": "REAL",
+  "model": "solar-pro4",
+  "passed": true,
+  "observation_exit": 0,
+  "diagnosis_exit": 0,
+  "runs": [
+    {
+      "run_id": "run-20261124T114722880559-01",
+      "case": "normal",
+      "solar_advice_requested": false,
+      "solar_advice_received": false,
+      "solar_strategy_applied": false,
+      "strategy_verified": true,
+      "transfer_verified": true,
+      "scenario_reproduced": true
+    },
+    {
+      "run_id": "run-20261124T114723356177-02",
+      "case": "early_close",
+      "solar_advice_requested": true,
+      "solar_advice_received": true,
+      "solar_strategy_applied": true,
+      "strategy_verified": true,
+      "transfer_verified": true,
+      "scenario_reproduced": true
+    },
+    {
+      "run_id": "run-20261124T114725547840-03",
+      "case": "stall",
+      "solar_advice_requested": true,
+      "solar_advice_received": true,
+      "solar_strategy_applied": true,
+      "strategy_verified": true,
+      "transfer_verified": true,
+      "scenario_reproduced": true
+    },
+    {
+      "run_id": "run-20261124T114728794143-04",
+      "case": "insufficient",
+      "solar_advice_requested": true,
+      "solar_advice_received": true,
+      "solar_strategy_applied": true,
+      "strategy_verified": true,
+      "transfer_verified": true,
+      "scenario_reproduced": true
+    }
+  ]
+}

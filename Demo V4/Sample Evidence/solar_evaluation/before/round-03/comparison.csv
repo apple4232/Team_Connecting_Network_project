@@ -1,0 +1,5 @@
+﻿run_id,case,expected,rule_diagnosis,rule_correct,rule_evidence_ids,rule_evidence_supports,solar_model,solar_diagnosis,solar_correct,solar_evidence_ids,solar_evidence_ids_exist,solar_evidence_supports,solar_withheld,solar_missing_evidence,solar_error,transfer_verified,resume_offset,human_review
+run-20261124T114013666804-01,normal,no_failure_observed,no_failure_observed,True,E010 E012,True,solar-pro4-260806,no_failure_observed,True,E001 E004 E009 E010 E011 E012,True,True,False,,,True,0,
+run-20261124T114014146911-02,early_close,early_connection_close,early_connection_close,True,E008,True,solar-pro4-260806,early_connection_close,True,E007 E008 E009 E011,True,True,False,,,True,1398101,
+run-20261124T114016674176-03,stall,timeout_or_stall,timeout_or_stall,True,E008,True,solar-pro4-260806,timeout_or_stall,True,E008,True,True,False,,,True,1398101,
+run-20261124T114021072927-04,insufficient,insufficient_evidence,insufficient_evidence,True,,True,solar-pro4-260806,insufficient_evidence,True,,True,True,True,"패킷 관측 없음으로 TCP 중단 유형(연결 종료/리셋/recv timeout) 확인 불가, 전송 완료(TRANSFER_COMPLETED) 및 SHA256 검증(SHA256_OK) 이벤트 미관측, 재접속 후 전송 결과 및 최종 검증 결과 부재",,True,1398101,

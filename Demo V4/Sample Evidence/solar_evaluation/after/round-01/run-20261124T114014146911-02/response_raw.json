@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"interruption_evidence_ids\": [\"E008\"],\n  \"transfer_outcome\": \"verified_complete\",\n  \"outcome_evidence_ids\": [\"E016\", \"E019\"],\n  \"diagnosis\": \"early_connection_close\",\n  \"evidence_ids\": [\"E004\", \"E007\", \"E008\", \"E011\", \"E016\", \"E019\"],\n  \"withheld\": false,\n  \"missing_evidence\": []\n}",
+  "request_id": "8b8441c9-42e4-4320-8977-78018817c40d",
+  "usage": {
+    "prompt_tokens": 2316,
+    "completion_tokens": 110,
+    "total_tokens": 2426,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}

@@ -1,0 +1,33 @@
+{
+  "run_id": "run-20261124T114021072927-04",
+  "case": "insufficient",
+  "interruption_evidence_ids": [],
+  "transfer_outcome": "not_verified",
+  "outcome_evidence_ids": [],
+  "observations_correct": true,
+  "expected_diagnosis": "insufficient_evidence",
+  "solar_diagnosis": "insufficient_evidence",
+  "diagnosis_match": true,
+  "expected_withheld": true,
+  "withheld": true,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "evidence_ids": [
+    "E002",
+    "E004",
+    "E005",
+    "E009",
+    "E013"
+  ],
+  "missing_evidence": [
+    "패킷 캡처 없음(available=false); 전송 완료(TRANSFER_COMPLETED) 및 SHA256_OK 이벤트 미관측; 재접속 후 전송 중단·완료 여부 확인 불가"
+  ],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 1398101
+  },
+  "model": "solar-pro4-260806"
+}

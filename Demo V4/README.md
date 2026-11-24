@@ -2,6 +2,8 @@
 
 Team Connecting · 컴퓨터 네트워크 팀 프로젝트
 
+[진행 현황과 다음 검증 계획](PROGRESS.md)에서 실제 Solar 반복 평가 결과, 부분 데이터 무결성 기준, 수신 시간 초과의 원인 진단 계획을 확인할 수 있습니다.
+
 ## 문제 배경
 
 대학 건물과 같은 환경에서는 네트워크 연결이 불안정해 데이터 전송이 도중에 끊길 수 있습니다.
@@ -245,7 +247,17 @@ sudo python3 packet_loss_experiment.py
 
 ## 3차 구현 B · Solar 진단과 평가
 
-`solar_diag.py`는 요청을 보내기 전에 패킷 요약과 허용된 애플리케이션 이벤트를 읽습니다. 응답에는 `{diagnosis, evidence_ids, withheld, missing_evidence}` 형식을 요구합니다. Solar에 보내는 자료에는 원본 캡처 바이트를 제외하고 요약을 담습니다.
+`solar_diag.py`는 요청을 보내기 전에 패킷 요약과 허용된 애플리케이션 이벤트를 읽습니다. Solar에 보내는 자료에는 원본 캡처 바이트를 제외하고 요약을 담습니다. 응답에는 기존 `diagnosis`, `evidence_ids`, `withheld`, `missing_evidence`에 더해 아래 관측 필드를 요구합니다.
+
+| 필드 | 의미 |
+|---|---|
+| `interruption_evidence_ids` | 관측 구간 전체의 `INTERRUPTED` 이벤트 ID |
+| `transfer_outcome` | 완료·해시 검증을 모두 확인하면 `verified_complete`, 확인할 수 없으면 `not_verified` |
+| `outcome_evidence_ids` | 완료와 해시 검증을 뒷받침하는 이벤트 ID |
+
+조기 종료 후 복구한 실행은 중단 근거와 `verified_complete`를 함께 반환할 수 있습니다. 비교표의 `solar_observations_correct`는 모델이 중단 이벤트를 모두 식별하고 최종 결과를 올바른 근거로 판정했는지 나타냅니다. 기존 진단·근거 평가는 유지하며, 실제 실행의 전체 통과에는 새 관측 평가도 포함합니다. 이전 형식의 저장된 응답은 기본 파서로 읽을 수 있으며, 새 실제 호출에서는 확장 필드를 필수로 검사합니다.
+
+이 형식은 동일한 네 사례를 세 번 재진단해 12건 중 11건이 맞았고 조기 종료 판정이 달라진 결과를 바탕으로 추가했습니다. 새 형식의 실제 반복 평가에서는 진단·근거·관측 구분 12/12가 통과했고, 새로 생성한 네 사례에서도 4/4가 통과했습니다. [실제 요청과 평가 자료](Sample%20Evidence/solar_evaluation/)에서 변경 전후 응답과 각 평가 열을 비교할 수 있습니다. 데이터 무결성과 타임아웃 원인 설명의 보완 사항은 [진행 기록](PROGRESS.md)에 정리했습니다.
 
 ```bash
 python solar_diag.py --all        # 규칙 기반 진단으로 전체 실행을 채점

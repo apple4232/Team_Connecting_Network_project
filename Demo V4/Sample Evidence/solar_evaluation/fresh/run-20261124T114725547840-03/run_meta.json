@@ -1,0 +1,46 @@
+{
+  "run_id": "run-20261124T114725547840-03",
+  "created": "20261124T114725547840",
+  "case": "stall",
+  "capture": {
+    "tools_detected": [
+      "dumpcap",
+      "tshark"
+    ],
+    "capture_status": "not_requested",
+    "summary_status": "not_run",
+    "available": false,
+    "reason": "이 실행에서 패킷 캡처를 요청하지 않았습니다"
+  },
+  "evidence_count": 20,
+  "client_exit": 0,
+  "recovered": true,
+  "final_hash_match": true,
+  "final_size_match": true,
+  "scenario_reproduced": true,
+  "resume_offset": 1398101,
+  "interruptions": [
+    "recv timeout"
+  ],
+  "recovery_decisions": [
+    {
+      "ts": "2026-11-24T11:47:28.216+09:00",
+      "mono": 129312.359,
+      "actor": "client",
+      "class": "observation",
+      "event": "RECOVERY_DECISION",
+      "attempt": 1,
+      "strategy": "resume",
+      "source": "solar",
+      "reason": "saved_bytes와 expected_saved_bytes가 일치하므로 수신된 데이터가 완전합니다. recv timeout은 일시적 네트워크 문제로 보이며, 재접속 후 서버 파일 식별값 검증과 함께 resume을 진행하면 남은 데이터를 효율적으로 전송할 수 있습니다.",
+      "saved_bytes": 1398101,
+      "expected_saved_bytes": 1398101,
+      "retries_left": 3
+    }
+  ],
+  "time_basis": "벽시계 ISO-8601(ts) — 서버·클라이언트 같은 호스트 시계",
+  "observation_points": [
+    "server_app",
+    "client_app"
+  ]
+}

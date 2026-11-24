@@ -1,0 +1,23 @@
+{
+  "run_id": "run-20261124T114021072927-04",
+  "case": "insufficient",
+  "expected_diagnosis": "insufficient_evidence",
+  "solar_diagnosis": "insufficient_evidence",
+  "diagnosis_match": true,
+  "expected_withheld": true,
+  "withheld": true,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "evidence_ids": [],
+  "missing_evidence": [
+    "패킷 관측 없음으로 TCP 중단 유형(연결 종료/리셋/recv timeout) 확인 불가, 전송 완료(TRANSFER_COMPLETED) 및 SHA256 검증(SHA256_OK) 이벤트 미관측, 재접속 후 전송 결과 및 최종 검증 결과 부재"
+  ],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 1398101
+  },
+  "model": "solar-pro4-260806"
+}

@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"diagnosis\": \"no_failure_observed\",\n  \"evidence_ids\": [\"E016\", \"E019\"],\n  \"withheld\": false,\n  \"missing_evidence\": []\n}",
+  "request_id": "7a1ad88b-993c-411b-8f92-8278d27c20d1",
+  "usage": {
+    "prompt_tokens": 2146,
+    "completion_tokens": 44,
+    "total_tokens": 2190,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}

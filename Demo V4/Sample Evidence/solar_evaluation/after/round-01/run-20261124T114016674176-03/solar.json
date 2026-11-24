@@ -1,0 +1,34 @@
+{
+  "run_id": "run-20261124T114016674176-03",
+  "case": "stall",
+  "interruption_evidence_ids": [
+    "E008"
+  ],
+  "transfer_outcome": "verified_complete",
+  "outcome_evidence_ids": [
+    "E017",
+    "E020"
+  ],
+  "observations_correct": true,
+  "expected_diagnosis": "timeout_or_stall",
+  "solar_diagnosis": "timeout_or_stall",
+  "diagnosis_match": true,
+  "expected_withheld": false,
+  "withheld": false,
+  "withheld_match": true,
+  "evidence_ids_exist": true,
+  "evidence_supports": true,
+  "evidence_ids": [
+    "E008",
+    "E017",
+    "E020"
+  ],
+  "missing_evidence": [],
+  "python_recovery": {
+    "client_exit": 0,
+    "recovered": true,
+    "final_hash_match": true,
+    "resume_offset": 1398101
+  },
+  "model": "solar-pro4-260806"
+}

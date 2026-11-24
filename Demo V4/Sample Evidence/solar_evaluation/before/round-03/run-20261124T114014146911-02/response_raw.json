@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"diagnosis\": \"early_connection_close\",\n  \"evidence_ids\": [\"E007\", \"E008\", \"E009\", \"E011\"],\n  \"withheld\": false,\n  \"missing_evidence\": []\n}",
+  "request_id": "08bf6841-e4ff-4e3d-9b2e-aaa8b85efd69",
+  "usage": {
+    "prompt_tokens": 2146,
+    "completion_tokens": 55,
+    "total_tokens": 2201,
+    "prompt_tokens_details": {
+      "cached_tokens": 1088,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}

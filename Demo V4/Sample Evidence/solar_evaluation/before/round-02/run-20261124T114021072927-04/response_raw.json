@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"diagnosis\": \"insufficient_evidence\",\n  \"evidence_ids\": [],\n  \"withheld\": true,\n  \"missing_evidence\": [\"전송 중단(INTERRUPTED) 또는 연결 시도 실패(ATTEMPT_FAILED) 이벤트가 관측되지 않음\", \"전송 완료(TRANSFER_COMPLETED) 및 SHA256 검증 성공(SHA256_OK) 이벤트가 관측되지 않음\", \"패킷 관측(pcap)이 없어 TCP 스트림의 연결 종료·타임아웃·재전송 등 실제 전송 상태를 확인할 수 없음\"]\n}",
+  "request_id": "1c224058-3938-4cd3-a309-8dd4c3305078",
+  "usage": {
+    "prompt_tokens": 991,
+    "completion_tokens": 111,
+    "total_tokens": 1102,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}

@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"interruption_evidence_ids\": [],\n  \"transfer_outcome\": \"not_verified\",\n  \"outcome_evidence_ids\": [],\n  \"diagnosis\": \"insufficient_evidence\",\n  \"evidence_ids\": [\"E002\", \"E004\", \"E005\", \"E010\", \"E013\"],\n  \"withheld\": true,\n  \"missing_evidence\": [\"TRANSFER_COMPLETED 및 SHA256_OK 이벤트 미관측, 패킷 캡처 미제공으로 전송 완료·해시 검증 및 중단 여부 확인 불가\"]\n}",
+  "request_id": "e6e18cce-457b-4661-a466-43147c228e36",
+  "usage": {
+    "prompt_tokens": 1161,
+    "completion_tokens": 121,
+    "total_tokens": 1282,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}

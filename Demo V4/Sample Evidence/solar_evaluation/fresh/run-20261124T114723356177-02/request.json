@@ -1,0 +1,80 @@
+{
+  "model": "solar-pro4",
+  "temperature": 0,
+  "max_tokens": 700,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "network_diagnosis",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "interruption_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "transfer_outcome": {
+            "type": "string",
+            "enum": [
+              "verified_complete",
+              "not_verified"
+            ]
+          },
+          "outcome_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "diagnosis": {
+            "type": "string",
+            "enum": [
+              "early_connection_close",
+              "timeout_or_stall",
+              "no_failure_observed",
+              "insufficient_evidence"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "withheld": {
+            "type": "boolean"
+          },
+          "missing_evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "interruption_evidence_ids",
+          "transfer_outcome",
+          "outcome_evidence_ids",
+          "diagnosis",
+          "evidence_ids",
+          "withheld",
+          "missing_evidence"
+        ]
+      }
+    }
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "당신은 네트워크 파일 전송 로그 진단기다. 아래 조회 도구 결과만을 근거로 진단한다.\n\n판정 대상은 관측 구간 전체에서 발생한 장애다. 첫 연결부터 재접속과 최종 검증까지\n시간순으로 검토하라. 복구 후 완료·해시 검증 성공은 복구 결과를 나타낸다.\n예상 크기 이전에 connection closed/reset으로 중단된 INTERRUPTED가 있으면,\n이후 전송 완료 여부와 관계없이 early_connection_close를 선택하라.\nrecv timeout으로 중단된 INTERRUPTED가 있으면 이후 복구 여부와 관계없이\ntimeout_or_stall을 선택하라. 서로 다른 중단 유형이 함께 관측되면 판단을 보류하라.\nno_failure_observed는 관측 전체에 INTERRUPTED와 ATTEMPT_FAILED가 하나도 없고,\nTRANSFER_COMPLETED와 SHA256_OK가 모두 있을 때만 선택하라.\n\n조회 도구(2개):\n- get_packet_summary: 패킷 캡처 요약. available=true 이면 TCP 스트림별 집계 및\n  실제 프레임을 가리키는 P로 시작하는 evidence_id가 포함된다.\n- get_app_log_events: 응용 관측 이벤트. source=server_app/client_app, ts는 같은 호스트 벽시계다.\n\n진단 상태(정확히 하나 선택):\n- early_connection_close: 예상 크기 도달 전 연결이 닫혀 전송 중단.\n  근거 예: INTERRUPTED(reason=\"connection closed\" 또는 \"connection reset\"),\n  CONNECTION_CLOSED(file_pos < 전체), 이후 REQUEST(offset>0) 재접속.\n- timeout_or_stall: 수신 대기 시간 초과로 중단. 근거 예: INTERRUPTED(reason=\"recv timeout\").\n- no_failure_observed: 중단이나 연결 시도 실패 없이 TRANSFER_COMPLETED 와 SHA256_OK가 관찰됨.\n- insufficient_evidence: 어느 진단도 확정할 관측이 부족. 이때는 판단을 보류해야 한다.\n\n출력 규칙: 반드시 아래 JSON 하나만 출력하고 다른 문장을 덧붙이지 마라.\n먼저 관측한 중단 이벤트를 모두 식별하고, 이어서 최종 전송 결과를 기록한 뒤 장애를 판정하라.\ninterruption_evidence_ids에는 모든 INTERRUPTED 이벤트 ID를 시간순으로 적어라.\ntransfer_outcome은 TRANSFER_COMPLETED와 SHA256_OK가 모두 관측되면 verified_complete,\n그 외에는 not_verified다. not_verified는 공개 자료에서 최종 검증을 확인할 수 없다는 뜻이다.\noutcome_evidence_ids에는 verified_complete를 뒷받침하는 두 이벤트 ID를 적고,\nnot_verified이면 빈 배열로 두어라. 중단 후 복구한 실행에서는 중단 ID와\nverified_complete가 동시에 존재한다. 최종 성공 여부와 중단 유형을 각각 판정하라.\n{\n  \"interruption_evidence_ids\": [\"관측 전체의 INTERRUPTED 이벤트 ID\"],\n  \"transfer_outcome\": \"verified_complete 또는 not_verified\",\n  \"outcome_evidence_ids\": [\"전송 완료와 해시 검증 ID\"],\n  \"diagnosis\": \"<위 4개 중 하나>\",\n  \"evidence_ids\": [\"관측을 직접 뒷받침하는 evidence_id 목록 — 최소 1개, insufficient_evidence 면 빈 배열 가능\"],\n  \"withheld\": <true|false, insufficient_evidence 이면 true>,\n  \"missing_evidence\": [\"진단 확정에 필요하지만 관측되지 않은 증거 설명 — 보류 시 필수, 아니면 빈 배열\"]\n}\n조기 종료·시간 초과는 해당 INTERRUPTED 이벤트 ID를 인용하라.\n정상 전송은 TRANSFER_COMPLETED와 SHA256_OK를 각각 인용하라.\n관련 패킷 ID가 있으면 보조 근거로 인용하라.\nTCP 플래그와 재전송은 관측된 프레임만 설명하라. 재전송 의심 표시로 손실 원인을 단정하지 마라."
+    },
+    {
+      "role": "user",
+      "content": "{\"run_ref\": \"run-20261124T114723356177-02\", \"get_packet_summary\": {\"available\": false, \"reason\": \"이 실행에서 패킷 캡처를 요청하지 않았습니다\"}, \"get_app_log_events\": [{\"evidence_id\": \"E001\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:23.760+09:00\", \"event\": \"REQUEST\", \"offset\": 0}, {\"evidence_id\": \"E002\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:23.760+09:00\", \"event\": \"ACCEPTED\", \"conn_id\": 1}, {\"evidence_id\": \"E003\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:23.761+09:00\", \"event\": \"REQUEST\", \"conn_id\": 1, \"offset\": 0}, {\"evidence_id\": \"E004\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:23.764+09:00\", \"event\": \"TRANSFER_START\", \"expected_size\": 4194304}, {\"evidence_id\": \"E005\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:23.764+09:00\", \"event\": \"SEND_START\", \"conn_id\": 1, \"offset\": 0, \"remaining\": 4194304}, {\"evidence_id\": \"E006\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:23.767+09:00\", \"event\": \"SEND_PROGRESS\", \"conn_id\": 1, \"file_pos\": 1048576, \"bytes_sent\": 1048576}, {\"evidence_id\": \"E007\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:23.768+09:00\", \"event\": \"CONNECTION_CLOSED\", \"conn_id\": 1, \"by\": \"server\", \"file_pos\": 1398101, \"bytes_sent\": 1398101}, {\"evidence_id\": \"E008\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:23.770+09:00\", \"event\": \"INTERRUPTED\", \"reason\": \"connection closed\", \"saved_bytes\": 1398101, \"expected_size\": 4194304}, {\"evidence_id\": \"E009\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:25.463+09:00\", \"event\": \"RECONNECTED\", \"attempt\": 1}, {\"evidence_id\": \"E010\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.463+09:00\", \"event\": \"ACCEPTED\", \"conn_id\": 2}, {\"evidence_id\": \"E011\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:25.465+09:00\", \"event\": \"REQUEST\", \"offset\": 1398101}, {\"evidence_id\": \"E012\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.465+09:00\", \"event\": \"REQUEST\", \"conn_id\": 2, \"offset\": 1398101}, {\"evidence_id\": \"E013\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.465+09:00\", \"event\": \"SEND_START\", \"conn_id\": 2, \"offset\": 1398101, \"remaining\": 2796203}, {\"evidence_id\": \"E014\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.467+09:00\", \"event\": \"SEND_PROGRESS\", \"conn_id\": 2, \"file_pos\": 2446677, \"bytes_sent\": 1048576}, {\"evidence_id\": \"E015\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.470+09:00\", \"event\": \"SEND_PROGRESS\", \"conn_id\": 2, \"file_pos\": 3495253, \"bytes_sent\": 2097152}, {\"evidence_id\": \"E016\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:25.472+09:00\", \"event\": \"TRANSFER_COMPLETED\", \"bytes\": 4194304}, {\"evidence_id\": \"E017\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.472+09:00\", \"event\": \"SEND_PROGRESS\", \"conn_id\": 2, \"file_pos\": 4194304, \"bytes_sent\": 2796203}, {\"evidence_id\": \"E018\", \"source\": \"server_app\", \"ts\": \"2026-11-24T11:47:25.472+09:00\", \"event\": \"CONNECTION_CLOSED\", \"conn_id\": 2, \"by\": \"server\", \"file_pos\": 4194304, \"bytes_sent\": 2796203}, {\"evidence_id\": \"E019\", \"source\": \"client_app\", \"ts\": \"2026-11-24T11:47:25.485+09:00\", \"event\": \"SHA256_OK\", \"bytes\": 4194304}]}"
+    }
+  ]
+}

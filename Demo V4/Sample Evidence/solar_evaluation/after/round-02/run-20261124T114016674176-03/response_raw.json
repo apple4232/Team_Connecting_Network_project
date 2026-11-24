@@ -1,0 +1,21 @@
+{
+  "content": "{\n  \"interruption_evidence_ids\": [\"E008\"],\n  \"transfer_outcome\": \"verified_complete\",\n  \"outcome_evidence_ids\": [\"E017\", \"E020\"],\n  \"diagnosis\": \"timeout_or_stall\",\n  \"evidence_ids\": [\"E008\", \"E017\", \"E020\"],\n  \"withheld\": false,\n  \"missing_evidence\": []\n}",
+  "request_id": "83132a94-def8-4951-bd46-3a9146450544",
+  "usage": {
+    "prompt_tokens": 2409,
+    "completion_tokens": 93,
+    "total_tokens": 2502,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "model": "solar-pro4-260806",
+  "finish": "stop"
+}
