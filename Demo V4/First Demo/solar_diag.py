@@ -96,7 +96,17 @@ TRANSFER_COMPLETED와 SHA256_OK가 모두 있을 때만 선택하라.
 - insufficient_evidence: 어느 진단도 확정할 관측이 부족. 이때는 판단을 보류해야 한다.
 
 출력 규칙: 반드시 아래 JSON 하나만 출력하고 다른 문장을 덧붙이지 마라.
+먼저 관측한 중단 이벤트를 모두 식별하고, 이어서 최종 전송 결과를 기록한 뒤 장애를 판정하라.
+interruption_evidence_ids에는 모든 INTERRUPTED 이벤트 ID를 시간순으로 적어라.
+transfer_outcome은 TRANSFER_COMPLETED와 SHA256_OK가 모두 관측되면 verified_complete,
+그 외에는 not_verified다. not_verified는 공개 자료에서 최종 검증을 확인할 수 없다는 뜻이다.
+outcome_evidence_ids에는 verified_complete를 뒷받침하는 두 이벤트 ID를 적고,
+not_verified이면 빈 배열로 두어라. 중단 후 복구한 실행에서는 중단 ID와
+verified_complete가 동시에 존재한다. 최종 성공 여부와 중단 유형을 각각 판정하라.
 {
+  "interruption_evidence_ids": ["관측 전체의 INTERRUPTED 이벤트 ID"],
+  "transfer_outcome": "verified_complete 또는 not_verified",
+  "outcome_evidence_ids": ["전송 완료와 해시 검증 ID"],
   "diagnosis": "<위 4개 중 하나>",
   "evidence_ids": ["관측을 직접 뒷받침하는 evidence_id 목록 — 최소 1개, insufficient_evidence 면 빈 배열 가능"],
   "withheld": <true|false, insufficient_evidence 이면 true>,
@@ -146,18 +156,22 @@ def build_request(run_id: str) -> dict:
     user = {"run_ref": run_id,
             "get_packet_summary": packet,
             "get_app_log_events": events}
-    return {"model": SOLAR_MODEL, "temperature": 0, "max_tokens": 500,
+    return {"model": SOLAR_MODEL, "temperature": 0, "max_tokens": 700,
             "response_format": {"type": "json_schema", "json_schema": {
                 "name": "network_diagnosis", "strict": True,
                 "schema": {
                     "type": "object", "additionalProperties": False,
                     "properties": {
+                        "interruption_evidence_ids": {"type": "array", "items": {"type": "string"}},
+                        "transfer_outcome": {"type": "string", "enum": ["verified_complete", "not_verified"]},
+                        "outcome_evidence_ids": {"type": "array", "items": {"type": "string"}},
                         "diagnosis": {"type": "string", "enum": list(STATUSES)},
                         "evidence_ids": {"type": "array", "items": {"type": "string"}},
                         "withheld": {"type": "boolean"},
                         "missing_evidence": {"type": "array", "items": {"type": "string"}},
                     },
-                    "required": ["diagnosis", "evidence_ids", "withheld", "missing_evidence"],
+                    "required": ["interruption_evidence_ids", "transfer_outcome", "outcome_evidence_ids",
+                                 "diagnosis", "evidence_ids", "withheld", "missing_evidence"],
                 },
             }},
             "messages": [{"role": "system", "content": SYSTEM_PROMPT},
@@ -218,7 +232,10 @@ def rule_diagnosis(events: list[dict]) -> dict:
         diagnosis = "no_failure_observed"
         evidence_ids = [completed[-1], verified[-1]]
         missing = []
-    return {"diagnosis": diagnosis, "evidence_ids": evidence_ids,
+    return {"interruption_evidence_ids": _ids_of(events, "INTERRUPTED"),
+            "transfer_outcome": "verified_complete" if completed and verified else "not_verified",
+            "outcome_evidence_ids": [completed[-1], verified[-1]] if completed and verified else [],
+            "diagnosis": diagnosis, "evidence_ids": evidence_ids,
             "withheld": diagnosis == "insufficient_evidence", "missing_evidence": missing}
 
 
@@ -227,7 +244,7 @@ def _ids_of(events: list[dict], event: str) -> list[str]:
 
 
 # ------------------------------------------------------------ 파싱/평가
-def parse_diagnosis(raw_content: str) -> dict:
+def parse_diagnosis(raw_content: str, *, require_observations: bool = False) -> dict:
     """응답에서 진단 JSON 추출 (```json 펜스 허용) + 스키마 검증."""
     if not isinstance(raw_content, str):
         raise ValueError("Solar 응답에 텍스트 본문이 없습니다")
@@ -260,6 +277,17 @@ def parse_diagnosis(raw_content: str) -> dict:
         raise ValueError("보류 여부와 missing_evidence 가 진단과 일치해야 합니다")
     if not withheld and not parsed["evidence_ids"]:
         raise ValueError("판정에는 근거 ID가 하나 이상 필요합니다")
+    observation_fields = {"interruption_evidence_ids", "transfer_outcome", "outcome_evidence_ids"}
+    if require_observations or observation_fields.intersection(parsed):
+        if not observation_fields <= parsed.keys():
+            raise ValueError("중단 근거와 최종 전송 결과 필드가 필요합니다")
+        if parsed["transfer_outcome"] not in ("verified_complete", "not_verified"):
+            raise ValueError("알 수 없는 transfer_outcome입니다")
+        for key in ("interruption_evidence_ids", "outcome_evidence_ids"):
+            values = parsed[key]
+            if not isinstance(values, list) or not all(
+                    isinstance(value, str) and value.strip() for value in values):
+                raise ValueError(f"{key}는 비어 있지 않은 문자열의 배열이어야 합니다")
     return parsed
 
 
@@ -284,8 +312,29 @@ def evaluate(run_id: str, parsed: dict) -> dict:
     else:
         supports = any(interruption_label(e) == diagnosis for e in cited_events)
 
+    observations_correct = None
+    if "transfer_outcome" in parsed:
+        completed = _ids_of(events, "TRANSFER_COMPLETED")
+        verified = _ids_of(events, "SHA256_OK")
+        outcome = "verified_complete" if completed and verified else "not_verified"
+        outcome_ids = parsed["outcome_evidence_ids"]
+        cited_outcome_types = {existing[i]["event"] for i in outcome_ids if i in existing}
+        outcome_supports = (
+            all(i in existing for i in outcome_ids)
+            and {"TRANSFER_COMPLETED", "SHA256_OK"} <= cited_outcome_types
+            if outcome == "verified_complete" else not outcome_ids
+        )
+        observations_correct = (
+            set(parsed["interruption_evidence_ids"]) == set(_ids_of(events, "INTERRUPTED"))
+            and parsed["transfer_outcome"] == outcome and outcome_supports
+        )
+
     return {
         "run_id": run_id, "case": meta["case"],
+        "interruption_evidence_ids": parsed.get("interruption_evidence_ids"),
+        "transfer_outcome": parsed.get("transfer_outcome"),
+        "outcome_evidence_ids": parsed.get("outcome_evidence_ids"),
+        "observations_correct": observations_correct,
         "expected_diagnosis": expected,
         "solar_diagnosis": diagnosis,
         "diagnosis_match": diagnosis == expected,
@@ -321,7 +370,7 @@ def diagnose(run_id: str, out: pathlib.Path, api_key: str | None) -> dict:
         result = call_solar(request, api_key)
         (out / "response_raw.json").write_text(
             json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-        parsed = parse_diagnosis(result["content"])
+        parsed = parse_diagnosis(result["content"], require_observations=True)
     except (OSError, KeyError, IndexError, TypeError, ValueError) as exc:
         message = str(exc).replace(api_key, "[REDACTED]")
         (out / "error.txt").write_text(message + "\n", encoding="utf-8")
@@ -351,6 +400,10 @@ def report_row(result: dict) -> dict:
         "solar_evidence_ids_exist": solar.get("evidence_ids_exist"),
         "solar_evidence_supports": solar.get("evidence_supports"),
         "solar_withheld": solar.get("withheld"),
+        "solar_interruption_evidence_ids": " ".join(solar.get("interruption_evidence_ids") or []),
+        "solar_transfer_outcome": solar.get("transfer_outcome"),
+        "solar_outcome_evidence_ids": " ".join(solar.get("outcome_evidence_ids") or []),
+        "solar_observations_correct": solar.get("observations_correct"),
         "solar_missing_evidence": " / ".join(solar.get("missing_evidence", [])),
         "solar_error": result.get("error"),
         "transfer_verified": recovery["recovered"] and recovery["final_hash_match"],
@@ -419,11 +472,14 @@ def main() -> int:
         line = f"[diag] {case} · 규칙 정답 {rule_correct}/{total} · 해시 일치 {verified}/{total}"
         if args.real:
             line += (f" · Solar 응답 {len(solar)}/{total} · 정답 {solar_correct}/{total}"
-                     f" · 근거 지지 {supported}/{total}")
+                     f" · 근거 지지 {supported}/{total}"
+                     f" · 중단·완료 구분 {sum(bool(row['solar_observations_correct']) for row in solar)}/{total}")
         print(line)
 
     prefix = "solar" if args.real else "rule"
     all_ok = all(row[f"{prefix}_correct"] and row[f"{prefix}_evidence_supports"] for row in rows)
+    if args.real:
+        all_ok = all_ok and all(row["solar_observations_correct"] for row in rows)
     print(f"[diag] {mode} · overall: {'PASS' if all_ok else 'FAIL'}")
     print(f"[diag] 결과표: {report}")
     return 0 if all_ok else 1
